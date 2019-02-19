@@ -1,0 +1,23 @@
+{
+	"name" : "@simpleview/sv-graphql-client",
+	"version" : "1.0.0",
+	"description" : "Client for communicating with sv-graphql",
+	"author" : "Owen Allen <owenallenaz@gmail.com>",
+	"devDependencies" : {
+		"@simpleview/mochalib" : "1.0.1",
+		"mocha" : "5.2.0"
+	},
+	"dependencies" : {
+		"axios" : "0.18.0"
+	},
+	"main" : "src/index.js",
+	"scripts" : {
+		"test" : "mocha testing",
+		"docker" : "./docker/build && ./docker/run || true"
+	},
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/simpleviewinc/sv-graphql-client"
+	},
+	"license" : "MIT"
+}
