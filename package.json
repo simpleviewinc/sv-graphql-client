@@ -13,7 +13,8 @@
 	"main" : "src/index.js",
 	"scripts" : {
 		"test" : "mocha testing",
-		"docker" : "./docker/build && ./docker/run || true"
+		"docker" : "./dev/build && ./dev/run || true",
+		"publish": "./dev/publish"
 	},
 	"repository" : {
 		"type" : "git",
