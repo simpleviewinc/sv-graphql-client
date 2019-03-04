@@ -1,17 +1,26 @@
 const axios = require("axios");
 
 async function query({ query, variables, url, token }) {
-	const response = await axios({
-		url,
-		method : "post",
-		headers : token ? {
-			Authorization : `Bearer ${token}`
-		} : undefined,
-		data : {
-			query,
-			variables
+	let response;
+	try {
+		response = await axios({
+			url,
+			method : "post",
+			headers : token ? {
+				Authorization : `Bearer ${token}`
+			} : undefined,
+			data : {
+				query,
+				variables
+			}
+		});
+	} catch(e) {
+		if (e.response.data && e.response.data.errors !== undefined) {
+			throw new Error(e.response.data.errors.map(val => val.message).join(", "));
 		}
-	});
+		
+		throw e;
+	}
 	
 	if (response.data.errors !== undefined) {
 		throw new Error(response.data.errors.map(val => val.message).join(", "));
