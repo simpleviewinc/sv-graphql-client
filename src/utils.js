@@ -18,14 +18,10 @@ async function query({ query, variables, url, token }) {
 		if (e.response.data && e.response.data.errors !== undefined) {
 			throw new Error(e.response.data.errors.map(val => val.message).join(", "));
 		}
-		
+
 		throw e;
 	}
-	
-	if (response.data.errors !== undefined) {
-		throw new Error(response.data.errors.map(val => val.message).join(", "));
-	}
-	
+
 	return response.data.data;
 }
 
