@@ -15,6 +15,7 @@ async function query({ query, variables, url, token }) {
 			}
 		});
 	} catch(e) {
+		console.log("here", e.response.data.errors)
 		if (e.response.data && e.response.data.errors !== undefined) {
 			throw new Error(e.response.data.errors.map(val => val.message).join(", "));
 		}
@@ -22,7 +23,7 @@ async function query({ query, variables, url, token }) {
 		throw e;
 	}
 	
-	if (response.data.errors !== undefined) {
+	if (response.data.errors !== undefined) {console.log("here 2", response.data.errors)
 		throw new Error(response.data.errors.map(val => val.message).join(", "));
 	}
 	
