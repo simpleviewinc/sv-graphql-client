@@ -8,11 +8,15 @@
 		"mocha": "5.2.0"
 	},
 	"dependencies": {
-		"axios": "0.18.0"
+		"@simpleview/assertlib": "1.0.1",
+		"@simpleview/mochalib": "1.0.1",
+		"apollo-server": "2.4.0",
+		"axios": "0.18.0",
+		"graphql" : "14.0.2"
 	},
 	"main": "src/index.js",
 	"scripts": {
-		"test": "mocha testing",
+		"test": "mocha testing && node ./testing/testServer.js",
 		"docker": "./dev/build && ./dev/run || true",
 		"publish": "./dev/publish"
 	},
