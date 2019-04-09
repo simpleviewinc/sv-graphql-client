@@ -3,6 +3,7 @@ const assert = require("assert");
 const mochaLib = require("@simpleview/mochalib");
 const { testArray } = require("@simpleview/mochalib");
 const { deepCheck } = require("@simpleview/assertlib");
+const server = require("./testServer");
 
 describe(__filename, function() {
 	it("should boot a graphServer with context", async function() {
@@ -289,7 +290,6 @@ describe(__filename, function() {
 			},
 		]
 		
-
 		testArray(tests, function(test) {
 			nullToUndefined(test.item);
 			deepCheck(test.item, test.result);
@@ -297,16 +297,117 @@ describe(__filename, function() {
 	});
 	
 	describe("query", function() {
-
+		let graphUrl = "";
 		before(async function() {
-			const rtn = await testServers.default.auth.reset_data();
+		
+			const rtn = await server.listen().then(({ url }) => {
+				graphUrl = url
+				return "Server ready";
+			});
 			
-			assert.strictEqual(rtn.success, true);
+			assert.strictEqual(rtn, "Server ready");
 		});
 		var tests = [
-			
+			{
+				name : "Query all keys",
+				args : {
+					query : () => query({
+						query : `
+							{
+								books {
+									title
+									author
+								}
+							}
+						`,
+						variables : {},
+						url : graphUrl
+					}),
+					result : {
+						books: [ 
+							{ 
+								title: 'Harry Potter and the Chamber of Secrets',
+								author: 'J.K. Rowling' 
+							},
+						  	{ 
+								title: 'Jurassic Park', 
+								author: 'Michael Crichton' 
+							} 
+						] 
+					}
+				}
+			},
+
+			{
+				name : "Query wrong keys (GraphQl Validation)",
+				args : {
+					query : () => query({
+						query : `
+							{
+								books {
+									title
+									author
+									bogusKey
+								}
+							}
+						`,
+						variables : {},
+						url : graphUrl
+					}),
+					error: 'Cannot query field "bogusKey" on type "Book".'
+				}
+			},
+
+			{
+				name : "Query missing required keys",
+				args : {
+					query : () => query({
+						query : `
+							{
+								books {
+									author
+								}
+							}
+						`,
+						variables : {},
+						url : graphUrl
+					}),
+					error: 'Cannot query field "bogusKey" on type "Book".'
+				}
+			},
+
+			{
+				name : "Query wrong incorrect graph url",
+				args : {
+					query : () => query({
+						query : `
+							{
+								books {
+									title
+									author
+									bogusKey
+								}
+							}
+						`,
+						variables : {},
+						url : "http://localhost/"
+					}),
+					error: 'Cannot read property \'data\' of undefined'
+				}
+			},
 		]
-		
-		// TODO
+
+		testArray(tests, async function(test) {
+			let rtn;
+			try {
+				rtn = await test.query();
+				console.log("rtn", rtn)
+			} catch(e) {
+				assert.strictEqual(e.message, test.error);
+				return;
+			}
+			
+			deepCheck(rtn, test.result);
+		});
 	});
 });

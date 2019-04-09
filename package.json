@@ -16,7 +16,7 @@
 	},
 	"main": "src/index.js",
 	"scripts": {
-		"test": "mocha testing && node ./testing/testServer.js",
+		"test": "mocha testing",
 		"docker": "./dev/build && ./dev/run || true",
 		"publish": "./dev/publish"
 	},
