@@ -40,6 +40,10 @@ function nullToUndefined(obj) {
 			delete obj[i];
 		} else if (obj[i] instanceof Array) {
 			for (let [key, val] of Object.entries(obj[i])) {
+				if(val === null){
+					const index = obj[i].indexOf(val);
+					obj[i].splice(index, 1);
+				}
 				nullToUndefined(val);
 			}
 		} else if (isPlainObject(obj[i])) {
