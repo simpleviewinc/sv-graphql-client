@@ -1,43 +1,78 @@
 const { ApolloServer, gql } = require('apollo-server');
 
-// This is a (sample) collection of books we'll be able to query
-// the GraphQL server for.  A more complete example might fetch
-// from an existing data source like a REST API or database.
-const books = [
-  {
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
+// Test data.
+let test_books_data = [];
 
-// Type definitions define the "shape" of your data and specify
-// which ways the data can be fetched from the GraphQL server.
 const typeDefs = gql`
-  # Comments in GraphQL are defined with the hash (#) symbol.
+    type Query {
+        test_books: test_result
+    }
 
-  # This "Book" type can be used in other type declarations.
-  type Book {
-    title: String!
-    author: String
-  }
+    type Mutation {
+        test_books_update(input : test_update_book!) : test_result
+        test_reset : test_result
+    }
 
-  # The "Query" type is the root of all GraphQL queries.
-  # (A "Mutation" type will be covered later on.)
-  type Query {
-    books: [Book]
-  }
+    type test_result {
+		success : Boolean!
+		message : String
+		books: [test_book]
+	}
+
+    type test_book {
+        title: String
+        author: String
+    }
+
+    input test_update_book {
+        index: String!
+        title: String!
+        author: String
+    }
 `;
 
-// Resolvers define the technique for fetching the types in the
-// schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
-  Query: {
-    books: () => books,
-  },
+    Query: {
+        test_books(parent, arg, context, info) { 
+            return {
+                success : true
+            }
+        }
+    },
+    Mutation:{
+        test_books_update(parent, { input : { title, index, author } }, context, info) {
+            const itemIndex = parseInt(index);
+            test_books_data[itemIndex].title = title;
+            if(author !== undefined) {
+                test_books_data[itemIndex].author = author;
+            };
+
+            return {
+                success : true
+            };
+        },
+        test_reset(parent, arg, context, info) {
+            test_books_data = [
+                {
+                    title: 'Harry Potter and the Chamber of Secrets',
+                    author: 'J.K. Rowling'
+                },
+                {
+                    title: 'Jurassic Park',
+                    author: 'Michael Crichton'
+                }
+            ];
+
+            return {
+                success : true
+            };
+        }
+    },
+    test_result : {
+		books(parent, args, context, info) {
+			return test_books_data;
+		}
+	},
 };
 
 module.exports = new ApolloServer({ typeDefs, resolvers });
