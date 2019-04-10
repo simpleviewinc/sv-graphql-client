@@ -4,6 +4,7 @@ const mochaLib = require("@simpleview/mochalib");
 const { testArray } = require("@simpleview/mochalib");
 const { deepCheck } = require("@simpleview/assertlib");
 const server = require("./testServer");
+const api = require("./apis");
 
 describe(__filename, function() {
 	it("should boot a graphServer with context", async function() {
@@ -43,25 +44,6 @@ describe(__filename, function() {
 					result : {
 						name : "Test",
 						imageUrl : undefined
-					}
-				}
-			},
-			{
-				name : "nullToUndefined only key in object or array that is null should return empty instance of that object or array",
-				args : {
-					item : {
-						name : "Test",
-						assets : {
-							imageUrl : null
-						},
-						users : [
-							null
-						]
-					},
-					result : {
-						name : "Test",
-						assets : {},
-						users : []
 					}
 				}
 			},
@@ -112,7 +94,32 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined recursive and an inside an array",
+				name : "nullToUndefined recursive root key null values",
+				args : {
+					item : {
+						name : "Test",
+						assets : {
+							items : [null]
+						},
+						foo : {
+							bar : {
+								baz : null
+							}
+						}
+					},
+					result : {
+						name : "Test",
+						assets : {
+							items: []
+						},
+						foo: {
+							bar: {}
+						}
+					}
+				}
+			},
+			{
+				name : "nullToUndefined recursive inside an array",
 				args : {
 					item : {
 						name : "Test",
@@ -136,7 +143,7 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined recursive and an inside an array multiple null values",
+				name : "nullToUndefined recursive inside an array with multiple null values",
 				args : {
 					item : {
 						name : "Test",
@@ -161,7 +168,7 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined recursive and an inside an array of objects",
+				name : "nullToUndefined recursive inside an array with one object",
 				args : {
 					item : {
 						name : "Test",
@@ -191,7 +198,7 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined recursive and an inside an array of multiple objects",
+				name : "nullToUndefined recursive inside an array of multiple objects",
 				args : {
 					item : {
 						name : "Test",
@@ -235,7 +242,7 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined recursive and an inside an array of multiple objects that contain an array with multiple null items",
+				name : "nullToUndefined recursive inside an array of multiple objects that contain an array with multiple null items",
 				args : {
 					item : {
 						name : "Test",
@@ -298,32 +305,42 @@ describe(__filename, function() {
 	
 	describe("query", function() {
 		let graphUrl = "";
-		before(async function() {
-		
+		before(async () => {
+			// start Server
 			const rtn = await server.listen().then(({ url }) => {
-				graphUrl = url
+				graphUrl = url;
 				return "Server ready";
 			});
 			
 			assert.strictEqual(rtn, "Server ready");
+
+			// reset data
+			const result = await api.test_reset({
+				fields : `
+					success
+				`,
+				url : graphUrl
+			});
+
+			assert.strictEqual(result.success, true);
+
 		});
 		var tests = [
 			{
-				name : "Query all keys",
+				name : "Query simple query",
 				args : {
-					query : () => query({
-						query : `
-							{
-								books {
-									title
-									author
-								}
+					query : () => api.test_books({
+						fields : `
+							success
+							books{
+								title
+								author
 							}
 						`,
-						variables : {},
 						url : graphUrl
 					}),
 					result : {
+						success: true,
 						books: [ 
 							{ 
 								title: 'Harry Potter and the Chamber of Secrets',
@@ -337,71 +354,136 @@ describe(__filename, function() {
 					}
 				}
 			},
-
 			{
-				name : "Query wrong keys (GraphQl Validation)",
+				name : "Query mutation with variables success true",
+				after : async () => {
+					const result = await api.test_reset({
+						fields : `
+							success
+						`,
+						url : graphUrl
+					});
+					
+					assert.strictEqual(result.success, true);
+				},
 				args : {
-					query : () => query({
-						query : `
-							{
-								books {
+					query : async () => api.test_books_update({
+							fields: `
+								success
+								books{
+									title
+									author
+								}
+							`,
+							variables : {
+								input : {
+									title: "Updated Title", 
+									index: "0"
+								}
+							},
+							url : graphUrl
+					}),
+					result : {
+						success: true,
+						books: [ 
+							{ 
+								title: 'Updated Title',
+								author: 'J.K. Rowling' 
+							},
+						  	{ 
+								title: 'Jurassic Park', 
+								author: 'Michael Crichton' 
+							} 
+						] 
+					}
+				}
+			},
+			// Query errors
+			{
+				name : "Query incorrect fields passed",
+				args : {
+					query : () => api.test_books({
+							fields : `
+								success
+								books{
 									title
 									author
 									bogusKey
 								}
-							}
-						`,
-						variables : {},
-						url : graphUrl
+							`,
+							url : graphUrl
 					}),
-					error: 'Cannot query field "bogusKey" on type "Book".'
+					error: 'Cannot query field "bogusKey" on type "test_book".'
 				}
 			},
-
 			{
-				name : "Query missing required keys",
+				name : "Query incorrect graph url",
 				args : {
-					query : () => query({
-						query : `
-							{
-								books {
-									author
-								}
+					query : () => api.test_books({
+						fields : `
+							success
+							books {
+								title
+								author
+								bogusKey
 							}
 						`,
-						variables : {},
-						url : graphUrl
-					}),
-					error: 'Cannot query field "bogusKey" on type "Book".'
-				}
-			},
-
-			{
-				name : "Query wrong incorrect graph url",
-				args : {
-					query : () => query({
-						query : `
-							{
-								books {
-									title
-									author
-									bogusKey
-								}
-							}
-						`,
-						variables : {},
 						url : "http://localhost/"
 					}),
-					error: 'Cannot read property \'data\' of undefined'
+					error: 'connect ECONNREFUSED 127.0.0.1:80'
 				}
 			},
+			{
+				name : "Query incorrect path",
+				args : {
+					query : () => api.test({
+						fields : `
+							success
+							books{
+								title
+								author
+							}
+						`,
+						variables : {
+							input : {
+								title: "Updated Title",
+								author: "Updated Author"
+							}
+						},
+						url : graphUrl
+					}),
+					error: 'api.test is not a function'
+				}
+			},
+			{
+				name : "Query missing required variables",
+				args : {
+					query : () => api.test_books_update({
+						fields : `
+							success
+							books{
+								title
+								author
+							}
+						`,
+						variables : {
+							input : {
+								title: "Updated Title",
+								author: "Updated Author"
+							}
+						},
+						url : graphUrl
+					}),
+					error: 'Variable "$input" got invalid value { title: "Updated Title", author: "Updated Author" }; Field value.index of required type String! was not provided.'
+				}
+			}
 		]
 
 		testArray(tests, async function(test) {
 			let rtn;
 			try {
 				rtn = await test.query();
-				console.log("rtn", rtn)
+				// console.log("rtn", rtn)
 			} catch(e) {
 				assert.strictEqual(e.message, test.error);
 				return;
