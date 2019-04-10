@@ -1,4 +1,4 @@
-const { GraphServer, query, isPlainObject, nullToUndefined } = require("../");
+const { GraphServer, nullToUndefined } = require("../");
 const assert = require("assert");
 const mochaLib = require("@simpleview/mochalib");
 const { testArray } = require("@simpleview/mochalib");
