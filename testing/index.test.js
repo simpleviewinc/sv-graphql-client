@@ -1,10 +1,9 @@
-const { GraphServer, nullToUndefined } = require("../");
+const { GraphServer, nullToUndefined, query } = require("../");
 const assert = require("assert");
 const mochaLib = require("@simpleview/mochalib");
 const { testArray } = require("@simpleview/mochalib");
 const { deepCheck } = require("@simpleview/assertlib");
 const server = require("./testServer");
-const api = require("./apis");
 
 describe(__filename, function() {
 	it("should boot a graphServer with context", async function() {
@@ -35,7 +34,7 @@ describe(__filename, function() {
 	describe("nullToUndefined", function() {
 		const tests = [
 			{
-				name : "nullToUndefined top level",
+				name : "top level",
 				args : {
 					item : {
 						name : "Test",
@@ -48,10 +47,9 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined 2 level deep",
+				name : "multiple level deep",
 				args : {
 					item : {
-						name : "Test",
 						assets : {
 							imageUrl : null,
 							user : {
@@ -60,66 +58,17 @@ describe(__filename, function() {
 						}
 					},
 					result : {
-						name : "Test",
 						assets : {
 							imageUrl : undefined,
-							user : {}
-						}
-					}
-				}
-			},
-			{
-				name : "nullToUndefined 2 level deep not root key",
-				args : {
-					item : {
-						name : "Test",
-						assets : {
-							items : {
-								name : "image",
-								size : "1100px x 2000px",
-								imageUrl : null
-							}
-						}
-					},
-					result : {
-						name : "Test",
-						assets : {
-							items : {
-								name : "image",
-								size : "1100px x 2000px",
-								imageUrl : undefined
+							user : {
+								name : undefined
 							}
 						}
 					}
 				}
 			},
 			{
-				name : "nullToUndefined recursive root key null values",
-				args : {
-					item : {
-						name : "Test",
-						assets : {
-							items : [null]
-						},
-						foo : {
-							bar : {
-								baz : null
-							}
-						}
-					},
-					result : {
-						name : "Test",
-						assets : {
-							items: []
-						},
-						foo: {
-							bar: {}
-						}
-					}
-				}
-			},
-			{
-				name : "nullToUndefined recursive inside an array",
+				name : "recursive inside an array",
 				args : {
 					item : {
 						name : "Test",
@@ -135,7 +84,7 @@ describe(__filename, function() {
 						name : "Test",
 						assets : {
 							items : [
-								"image", 
+								"image",
 								"1100px x 2000px"
 							]
 						}
@@ -143,10 +92,52 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined recursive inside an array with multiple null values",
+				name : "root element is empty array",
+				args : {
+					item : [],
+					result : []
+				}
+			},
+			{
+				name : "root element is array one null",
+				args : {
+					item : [null],
+					result : []
+				}
+			},
+			{
+				name : "root element is array multiple nulls",
+				args : {
+					item : ["foo", null, "bar", null],
+					result : ["foo", "bar"]
+				}
+			},
+			{
+				name : "nested inside an array with one null value",
 				args : {
 					item : {
-						name : "Test",
+						assets : {
+							items : [
+								"image",
+								null,
+								"1100px x 2000px"
+							]
+						}
+					},
+					result : {
+						assets : {
+							items : [
+								"image",
+								"1100px x 2000px"
+							]
+						}
+					}
+				}
+			},
+			{
+				name : "nested inside an array with multiple null values",
+				args : {
+					item : {
 						assets : {
 							items : [
 								"image",
@@ -157,10 +148,9 @@ describe(__filename, function() {
 						}
 					},
 					result : {
-						name : "Test",
 						assets : {
 							items : [
-								"image", 
+								"image",
 								"1100px x 2000px"
 							]
 						}
@@ -168,7 +158,7 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nullToUndefined recursive inside an array with one object",
+				name : "nested inside an array with one object",
 				args : {
 					item : {
 						name : "Test",
@@ -178,7 +168,6 @@ describe(__filename, function() {
 									imageUrl : null,
 									name : "image"
 								},
-								size = "1100px x 2000px",
 								null
 							]
 						}
@@ -190,15 +179,14 @@ describe(__filename, function() {
 								{
 									imageUrl : undefined,
 									name :"image"
-								}, 
-								size = "1100px x 2000px"
+								}
 							]
 						}
 					}
 				}
 			},
 			{
-				name : "nullToUndefined recursive inside an array of multiple objects",
+				name : "recursive inside an array of multiple objects",
 				args : {
 					item : {
 						name : "Test",
@@ -233,16 +221,16 @@ describe(__filename, function() {
 										nullKey : undefined
 									},
 									test2 : {}
-								}, 
+								},
 								"1100px x 2000px",
-								{ }
+								{}
 							]
 						}
 					}
 				}
 			},
 			{
-				name : "nullToUndefined recursive inside an array of multiple objects that contain an array with multiple null items",
+				name : "recursive inside an array of multiple objects that contain an array with multiple null items",
 				args : {
 					item : {
 						name : "Test",
@@ -266,9 +254,11 @@ describe(__filename, function() {
 								},
 								"1100px x 2000px",
 								null,
-								{ test : [
-									null
-								]}
+								{
+									test : [
+										null
+									]
+								}
 							]
 						}
 					},
@@ -304,187 +294,210 @@ describe(__filename, function() {
 	});
 	
 	describe("query", function() {
-		let graphUrl = "";
+		let graphUrl;
 		before(async () => {
 			// start Server
-			const rtn = await server.listen().then(({ url }) => {
+			await server.listen().then(({ url }) => {
 				graphUrl = url;
-				return "Server ready";
 			});
-			
-			assert.strictEqual(rtn, "Server ready");
-
-			// reset data
-			const result = await api.test_reset({
-				fields : `
-					success
-				`,
-				url : graphUrl
-			});
-
-			assert.strictEqual(result.success, true);
-
 		});
+		
+		after(async () => {
+			await server.stop();
+		});
+		
 		var tests = [
 			{
-				name : "Query simple query",
-				args : {
-					query : () => api.test_books({
-						fields : `
-							success
-							books{
-								title
-								author
+				name : "simple query",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query {
+							test_books {
+								success
+								message
+								books {
+									title
+									author
+								}
 							}
-						`,
-						url : graphUrl
-					}),
+						}
+					`,
 					result : {
-						success: true,
-						books: [ 
-							{ 
-								title: 'Harry Potter and the Chamber of Secrets',
-								author: 'J.K. Rowling' 
-							},
-						  	{ 
-								title: 'Jurassic Park', 
-								author: 'Michael Crichton' 
-							} 
-						] 
+						test_books : {
+							success: true,
+							message : "messageValue",
+							books: [
+								{
+									title: 'Harry Potter and the Chamber of Secrets',
+									author: 'J.K. Rowling' 
+								},
+								{
+									title: 'Jurassic Park',
+									author: 'Michael Crichton'
+								}
+							]
+						}
 					}
-				}
+				})
 			},
 			{
-				name : "Query mutation with variables success true",
-				after : async () => {
-					const result = await api.test_reset({
-						fields : `
-							success
-						`,
-						url : graphUrl
-					});
-					
-					assert.strictEqual(result.success, true);
-				},
-				args : {
-					query : async () => api.test_books_update({
-							fields: `
-								success
-								books{
-									title
-									author
-								}
-							`,
-							variables : {
-								input : {
-									title: "Updated Title", 
-									index: "0"
-								}
-							},
-							url : graphUrl
-					}),
-					result : {
-						success: true,
-						books: [ 
-							{ 
-								title: 'Updated Title',
-								author: 'J.K. Rowling' 
-							},
-						  	{ 
-								title: 'Jurassic Park', 
-								author: 'Michael Crichton' 
-							} 
-						] 
-					}
-				}
-			},
-			// Query errors
-			{
-				name : "Query incorrect fields passed",
-				args : {
-					query : () => api.test_books({
-							fields : `
-								success
-								books{
-									title
-									author
-									bogusKey
-								}
-							`,
-							url : graphUrl
-					}),
-					error: 'Cannot query field "bogusKey" on type "test_book".'
-				}
-			},
-			{
-				name : "Query incorrect graph url",
-				args : {
-					query : () => api.test_books({
-						fields : `
-							success
-							books {
-								title
-								author
+				name : "incorrect fields passed",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query {
+							test_books {
 								bogusKey
 							}
-						`,
-						url : "http://localhost/"
-					}),
+						}
+					`,
+					error: 'Cannot query field "bogusKey" on type "test_result".'
+				})
+			},
+			{
+				name : "incorrect graph url",
+				args : () => ({
+					url : "http://localhost/",
+					query : `
+						query {
+							test_books {
+								success
+							}
+						}
+					`,
 					error: 'connect ECONNREFUSED 127.0.0.1:80'
-				}
+				})
 			},
 			{
-				name : "Query incorrect path",
-				args : {
-					query : () => api.test({
-						fields : `
-							success
-							books{
-								title
-								author
+				name : "thrown error",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query {
+							test_books(filter : { throwError : true }) {
+								success
 							}
-						`,
-						variables : {
-							input : {
-								title: "Updated Title",
-								author: "Updated Author"
-							}
-						},
-						url : graphUrl
-					}),
-					error: 'api.test is not a function'
-				}
+						}
+					`,
+					error: 'Test throw!'
+				})
 			},
 			{
-				name : "Query missing required variables",
-				args : {
-					query : () => api.test_books_update({
-						fields : `
-							success
-							books{
-								title
-								author
+				name : "auth error",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query {
+							test_books(filter : { authError : true }) {
+								success
 							}
-						`,
-						variables : {
-							input : {
-								title: "Updated Title",
-								author: "Updated Author"
+						}
+					`,
+					error: 'Test throw!'
+				})
+			},
+			{
+				name : "thrown error in nested resolver",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query {
+							test_books {
+								throw
 							}
-						},
-						url : graphUrl
-					}),
-					error: 'Variable "$input" got invalid value { title: "Updated Title", author: "Updated Author" }; Field value.index of required type String! was not provided.'
-				}
+						}
+					`,
+					error : "Thrown from throw"
+				})
+			},
+			{
+				name : "thrown error in 2 nested resolvers",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query {
+							test_books {
+								throw
+								throw2
+							}
+						}
+					`,
+					error : "Thrown from throw, Thrown from throw2"
+				})
+			},
+			{
+				name : "with variables",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query($filter: test_books_filter) {
+							test_books(filter: $filter) {
+								success,
+								message
+							}
+						}
+					`,
+					variables : {
+						filter : {
+							message : "Changed"
+						}
+					},
+					result : {
+						test_books : {
+							success : true,
+							message : "Changed"
+						}
+					}
+				})
+			},
+			{
+				name : "missing required variables",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query($filter: test_books_withRequiredValues) {
+							test_books(withRequiredValues: $filter) {
+								success
+							}
+						}
+					`,
+					variables : {
+						filter: {}
+					},
+					error: 'Variable "$filter" got invalid value {}; Field value.requiredVal of required type String! was not provided.'
+				})
+			},
+			{
+				name : "multiple errors",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query {
+							test_books {
+								success
+								bogus
+								books {
+									bogus
+								}
+							}
+						}
+					`,
+					error : 'Cannot query field "bogus" on type "test_result". Did you mean "books"?, Cannot query field "bogus" on type "test_book".'
+				})
 			}
 		]
 
 		testArray(tests, async function(test) {
 			let rtn;
 			try {
-				rtn = await test.query();
-				// console.log("rtn", rtn)
+				rtn = await query({
+					query : test.query,
+					url : test.url,
+					variables : test.variables
+				})
 			} catch(e) {
+				assert.notStrictEqual(test.error, undefined, e);
 				assert.strictEqual(e.message, test.error);
 				return;
 			}
