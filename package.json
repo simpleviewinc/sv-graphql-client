@@ -1,13 +1,13 @@
 {
 	"name": "@simpleview/sv-graphql-client",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"description": "Client for communicating with sv-graphql",
 	"author": "Owen Allen <owenallenaz@gmail.com>",
 	"devDependencies": {
 		"@simpleview/assertlib": "1.0.1",
 		"@simpleview/mochalib": "1.0.1",
 		"apollo-server": "2.4.0",
-		"graphql" : "14.0.2",
+		"graphql": "14.0.2",
 		"mocha": "5.2.0"
 	},
 	"dependencies": {
