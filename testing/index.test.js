@@ -1,6 +1,5 @@
 const { GraphServer, nullToUndefined, query } = require("../");
 const assert = require("assert");
-const mochaLib = require("@simpleview/mochalib");
 const { testArray } = require("@simpleview/mochalib");
 const { deepCheck } = require("@simpleview/assertlib");
 const server = require("./testServer");

@@ -1,8 +1,5 @@
 const { ApolloServer, gql, AuthenticationError } = require('apollo-server');
 
-// Test data.
-let test_books_data = [];
-
 const typeDefs = gql`
 	type Query {
 		test_books(filter: test_books_filter, withRequiredValues: test_books_withRequiredValues): test_result
