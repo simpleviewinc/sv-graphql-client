@@ -22,8 +22,10 @@ async function query({ query, variables, url, token }) {
 		throw e;
 	}
 	
-	if (response.data.errors !== undefined) {console.log("here 2", response.data.errors)
-		throw new Error(response.data.errors.map(val => val.message).join(", "));
+	if (response.data.errors !== undefined) {
+		var err = new Error(response.data.errors.map(val => val.message).join(", "));
+		err.graphQLErrors = response.data.errors;
+		throw err;
 	}
 	
 	return response.data.data;
@@ -35,19 +37,24 @@ function isPlainObject(obj) {
 
 // Take an object with null values and recursively drop the null values. Useful for cleaning up graphQL responses.
 function nullToUndefined(obj) {
-	for(let i in obj) {
-		if (obj[i] === null) {
-			delete obj[i];
-		} else if (obj[i] instanceof Array) {
-			for (let [key, val] of Object.entries(obj[i])) {
-				if(val === null){
-					const index = obj[i].indexOf(val);
-					obj[i].splice(index, 1);
-				}
+	if (obj instanceof Array) {
+		for(let [key, val] of Object.entries(obj)) {
+			if (val === null) {
+				const index = obj.indexOf(val);
+				obj.splice(index, 1);
+			} else {
 				nullToUndefined(val);
 			}
-		} else if (isPlainObject(obj[i])) {
-			nullToUndefined(obj[i]);
+		}
+	} else {
+		for(let i in obj) {
+			if (obj[i] === null) {
+				delete obj[i];
+			} else if (obj[i] instanceof Array) {
+				nullToUndefined(obj[i]);
+			} else if (isPlainObject(obj[i])) {
+				nullToUndefined(obj[i]);
+			}
 		}
 	}
 }

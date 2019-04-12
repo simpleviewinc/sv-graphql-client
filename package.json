@@ -4,15 +4,14 @@
 	"description": "Client for communicating with sv-graphql",
 	"author": "Owen Allen <owenallenaz@gmail.com>",
 	"devDependencies": {
-		"@simpleview/mochalib": "1.0.1",
-		"mocha": "5.2.0"
-	},
-	"dependencies": {
 		"@simpleview/assertlib": "1.0.1",
 		"@simpleview/mochalib": "1.0.1",
 		"apollo-server": "2.4.0",
-		"axios": "0.18.0",
-		"graphql" : "14.0.2"
+		"graphql" : "14.0.2",
+		"mocha": "5.2.0"
+	},
+	"dependencies": {
+		"axios": "0.18.0"
 	},
 	"main": "src/index.js",
 	"scripts": {
