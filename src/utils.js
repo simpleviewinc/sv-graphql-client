@@ -1,4 +1,12 @@
 const axios = require("axios");
+let httpsAgent;
+
+if (typeof process !== "undefined") {
+	const https = require("https");
+	httpsAgent = new https.Agent({
+		keepAlive : true
+	});
+}
 
 async function query({ query, variables, url, token }) {
 	let response;
@@ -12,7 +20,8 @@ async function query({ query, variables, url, token }) {
 			data : {
 				query,
 				variables
-			}
+			},
+			httpsAgent : httpsAgent
 		});
 	} catch(e) {
 		if (e.response && e.response.data && e.response.data.errors !== undefined) {
