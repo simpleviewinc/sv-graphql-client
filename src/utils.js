@@ -17,6 +17,7 @@ async function query({ query, variables, url, token }) {
 			headers : token ? {
 				Authorization : `Bearer ${token}`
 			} : undefined,
+			maxContentLength: Infinity,
 			data : {
 				query,
 				variables
