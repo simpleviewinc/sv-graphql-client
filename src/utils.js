@@ -8,15 +8,17 @@ if (typeof process !== "undefined") {
 	});
 }
 
-async function query({ query, variables, url, token }) {
+async function query({ query, variables, url, token, headers = {} }) {
+	if( token ){
+		headers.Authorization = `Bearer ${token}`
+	}
+
 	let response;
 	try {
 		response = await axios({
 			url,
 			method : "post",
-			headers : token ? {
-				Authorization : `Bearer ${token}`
-			} : undefined,
+			headers,
 			maxContentLength: Infinity,
 			data : {
 				query,
