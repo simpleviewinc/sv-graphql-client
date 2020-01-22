@@ -29,6 +29,32 @@ describe(__filename, function() {
 		result = await graphServer.test.doSomething();
 		assert.strictEqual(result, "true_testing");
 	});
+
+	it("should boot a graphServer with different urls for different prefixes", async function() {
+		const PrefixOne = function(args) {
+			this.name = "one";
+			this.graphUrl = args.graphUrl;
+		}
+
+		const PrefixTwo = function(args) {
+			this.name = "two";
+			this.graphUrl = args.graphUrl;
+		}
+
+		const g = new GraphServer({
+			graphUrl : "https://www.google.com/",
+			prefixes : [
+				{
+					prefix : PrefixOne,
+					graphUrl : "https://www.bing.com/"
+				},
+				PrefixTwo
+			]
+		});
+
+		assert.strictEqual(g.one.graphUrl, "https://www.bing.com/");
+		assert.strictEqual(g.two.graphUrl, "https://www.google.com/");
+	})
 	
 	describe("nullToUndefined", function() {
 		const tests = [
