@@ -33,6 +33,8 @@ function GraphServer({ graphUrl, prefixes, context = {} }) {
 	this.email;
 	/** @type {import("../../sv-geo-client/src/prefixes/GeoPrefix")} */
 	this.geo;
+	/** @type {import("../../cms-admin-client/src/prefixes/CmsAdminPrefix") */
+	this.cmsAdmin;
 
 	this.context = context;
 	
