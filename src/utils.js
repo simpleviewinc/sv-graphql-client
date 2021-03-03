@@ -20,6 +20,7 @@ async function query({ query, variables, url, token, headers = {} }) {
 			method : "post",
 			headers,
 			maxContentLength: Infinity,
+			maxBodyLength : Infinity,
 			data : {
 				query,
 				variables
