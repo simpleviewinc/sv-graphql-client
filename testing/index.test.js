@@ -513,6 +513,7 @@ describe(__filename, function() {
 			},
 			{
 				name : "max_body_length and max_content_length",
+				timeout : 5000,
 				args : () => ({
 					url : graphUrl,
 					query : `
