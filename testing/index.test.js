@@ -510,6 +510,32 @@ describe(__filename, function() {
 					`,
 					error : 'Cannot query field "bogus" on type "test_result". Did you mean "books"?, Cannot query field "bogus" on type "test_book".'
 				})
+			},
+			{
+				name : "max_body_length and max_content_length",
+				timeout : 5000,
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query($filter: test_books_filter) {
+							test_books(filter: $filter) {
+								success,
+								message
+							}
+						}
+					`,
+					variables : {
+						filter : {
+							message : 'x'.repeat(15*1024*1024)
+						}
+					},
+					result : {
+						test_books : {
+							success : true,
+							message : 'x'.repeat(15*1024*1024)
+						}
+					}
+				})
 			}
 		]
 
