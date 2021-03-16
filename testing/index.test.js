@@ -490,7 +490,7 @@ describe(__filename, function() {
 					variables : {
 						filter: {}
 					},
-					error: 'Variable "$filter" got invalid value {}; Field value.requiredVal of required type String! was not provided.'
+					error: 'Variable "$filter" got invalid value {}; Field "requiredVal" of required type "String!" was not provided.'
 				})
 			},
 			{
