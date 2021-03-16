@@ -1,7 +1,9 @@
 const axios = require("axios");
 let httpsAgent;
 
-if (typeof process !== "undefined") {
+const isNode = typeof window === "undefined";
+
+if (isNode) {
 	const https = require("https");
 	httpsAgent = new https.Agent({
 		keepAlive : true
@@ -9,8 +11,13 @@ if (typeof process !== "undefined") {
 }
 
 async function query({ query, variables, url, token, headers = {} }) {
-	if( token ){
+	if (token) {
 		headers.Authorization = `Bearer ${token}`
+	}
+
+	if (isNode && headers["accept-encoding"] === undefined) {
+		// in node add a gzip header to return transmission size for larger payloads
+		headers["accept-encoding"] = "gzip";
 	}
 
 	let response;
