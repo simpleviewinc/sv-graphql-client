@@ -10,6 +10,15 @@ if (isNode) {
 	});
 }
 
+/**
+ * Queries a graphql server
+ * @param {object} args
+ * @param {string} args.query
+ * @param {object} [args.variables]
+ * @param {string} args.url
+ * @param {string} [args.token]
+ * @param {object} [args.headers]
+ */
 async function query({ query, variables, url, token, headers = {} }) {
 	if (token) {
 		headers.Authorization = `Bearer ${token}`
