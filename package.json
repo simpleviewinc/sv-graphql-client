@@ -12,7 +12,8 @@
 	},
 	"dependencies": {
 		"axios": "0.21.1",
-		"jsvalidator": "2.0.0"
+		"jsvalidator": "2.0.0",
+		"lodash": "4.17.21"
 	},
 	"main": "src/index.js",
 	"scripts": {

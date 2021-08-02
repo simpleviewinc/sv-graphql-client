@@ -3,6 +3,7 @@ const { ApolloServer, gql, AuthenticationError } = require('apollo-server');
 const typeDefs = gql`
 	type Query {
 		test_books(filter: test_books_filter, withRequiredValues: test_books_withRequiredValues): test_result
+		test_returns(input: test_returns_input): test_return
 	}
 
 	type test_result {
@@ -17,6 +18,11 @@ const typeDefs = gql`
 		title: String
 		author: String
 	}
+
+	type test_return {
+		data: String
+		nested: test_return
+	}
 	
 	input test_books_filter {
 		throwError : Boolean
@@ -27,6 +33,11 @@ const typeDefs = gql`
 	input test_books_withRequiredValues {
 		requiredVal : String!
 		nonRequiredVal : String
+	}
+
+	input test_returns_input {
+		data: String
+		nested: test_returns_input
 	}
 `;
 
@@ -55,6 +66,9 @@ const resolvers = {
 					}
 				]
 			}
+		},
+		test_returns(parent, { input }, context, info) {
+			return input;
 		}
 	},
 	test_result : {

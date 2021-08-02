@@ -1,4 +1,5 @@
 const axios = require("axios");
+const get = require("lodash/get");
 let httpsAgent;
 
 const isNode = typeof window === "undefined";
@@ -18,8 +19,18 @@ if (isNode) {
  * @param {string} args.url
  * @param {string} [args.token]
  * @param {object} [args.headers]
+ * @param {string} [args.key] - Whether to reach and return a specific sub-key of the return.
+ * @param {boolean} [args.clean=false] - Whether to automatically run nullToUndefined on the result set to clean it.
  */
-async function query({ query, variables, url, token, headers = {} }) {
+async function query({
+	query,
+	variables,
+	url,
+	token,
+	headers = {},
+	key,
+	clean = false
+}) {
 	if (token) {
 		headers.Authorization = `Bearer ${token}`
 	}
@@ -56,8 +67,18 @@ async function query({ query, variables, url, token, headers = {} }) {
 		err.graphQLErrors = response.data.errors;
 		throw err;
 	}
-	
-	return response.data.data;
+
+	let result = response.data.data;
+
+	if (clean === true) {
+		nullToUndefined(result);
+	}
+
+	if (key !== undefined) {
+		result = get(result, key);
+	}
+
+	return result;
 }
 
 function isPlainObject(obj) {

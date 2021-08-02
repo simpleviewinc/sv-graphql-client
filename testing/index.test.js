@@ -536,6 +536,108 @@ describe(__filename, function() {
 						}
 					}
 				})
+			},
+			{
+				name : "clean out null values",
+				args : () => ({
+					url : graphUrl,
+					clean : true,
+					query : `
+						query($input: test_returns_input) {
+							test_returns(input: $input) {
+								data
+								nested {
+									data
+									nested {
+										data
+									}
+								}
+							}
+						}
+					`,
+					variables : {
+						input : {
+							data : "foo",
+							nested : {
+								data : null,
+								nested : {
+									data : null
+								}
+							}
+						}
+					},
+					result : {
+						test_returns : {
+							data : "foo",
+							nested : {
+								data : undefined,
+								nested : {
+									data : undefined
+								}
+							}
+						}
+					}
+				})
+			},
+			{
+				name : "return null keys if returned",
+				args : () => ({
+					url : graphUrl,
+					query : `
+						query($input: test_returns_input) {
+							test_returns(input: $input) {
+								data
+								nested {
+									data
+									nested {
+										data
+									}
+								}
+							}
+						}
+					`,
+					variables : {
+						input : {
+							data : null,
+							nested : null
+						}
+					},
+					result : {
+						test_returns : {
+							data : null,
+							nested : null
+						}
+					}
+				})
+			},
+			{
+				name : "reach into key",
+				args : () => ({
+					url : graphUrl,
+					key : "test_returns.nested.data",
+					query : `
+						query($input: test_returns_input) {
+							test_returns(input: $input) {
+								data
+								nested {
+									data
+									nested {
+										data
+									}
+								}
+							}
+						}
+					`,
+					variables : {
+						input : {
+							data : "foo",
+							nested : {
+								data : "inner"
+							}
+						}
+					},
+					result : "inner"
+				})
 			}
 		]
 
@@ -545,14 +647,16 @@ describe(__filename, function() {
 				rtn = await query({
 					query : test.query,
 					url : test.url,
-					variables : test.variables
-				})
+					variables : test.variables,
+					clean : test.clean,
+					key : test.key
+				});
 			} catch(e) {
 				assert.notStrictEqual(test.error, undefined, e);
 				assert.strictEqual(e.message, test.error);
 				return;
 			}
-			
+
 			deepCheck(rtn, test.result);
 		});
 	});

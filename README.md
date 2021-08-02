@@ -63,6 +63,9 @@ Wrapper function to make it easier to talk to `sv-graphql` directly.
 	* variables - obj - If you're query utilizes variables, pass them on this object.
 	* url - string - The URL of the graphQL endpoint.
 	* token - string - The token which will be passed on the `Authorization` header as a `Bearer` token.
+	* headers - obj - An object of headers to append to the request
+	* key - string - Whether to reach and return a specific sub-key of the return.
+	* clean - boolean - Whether to automatically run nullToUndefined on the result set to clean it.
 
 ```js
 const { query } = require("@simpleview/sv-graphql-client");
