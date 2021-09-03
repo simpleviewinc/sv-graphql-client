@@ -21,6 +21,7 @@ if (isNode) {
  * @param {object} [args.headers]
  * @param {string} [args.key] - Whether to reach and return a specific sub-key of the return.
  * @param {boolean} [args.clean=false] - Whether to automatically run nullToUndefined on the result set to clean it.
+ * @param {number} [args.timeout]
  */
 async function query({
 	query,
@@ -29,7 +30,8 @@ async function query({
 	token,
 	headers = {},
 	key,
-	clean = false
+	clean = false,
+	timeout
 }) {
 	if (token) {
 		headers.Authorization = `Bearer ${token}`
@@ -52,7 +54,8 @@ async function query({
 				query,
 				variables
 			},
-			httpsAgent : httpsAgent
+			httpsAgent : httpsAgent,
+			timeout
 		});
 	} catch(e) {
 		if (e.response && e.response.data && e.response.data.errors !== undefined) {
