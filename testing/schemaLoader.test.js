@@ -4,7 +4,7 @@ const { deepCheck } = require("@simpleview/assertlib");
 describe(__filename, function() {
 	describe("schemaLoader", async function(){
 		it("should load schema", async function() {
-			const graphqlRootDirectory = '/app/testData/graphSchemaComponents/'
+			const graphqlRootDirectory = "/app/testData/graphSchemaComponents/";
 
 			const res = await schemaLoader({ graphqlRootDirectory });
 
