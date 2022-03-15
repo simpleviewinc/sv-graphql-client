@@ -15,14 +15,14 @@ describe(__filename, function() {
 		TestPrefix.prototype.doSomething = async function() {
 			return `true_${this.graphServer.context.hax}`;
 		}
-		
+
 		const graphServer = new GraphServer({
 			graphUrl : "http://fake.com/",
 			prefixes : [TestPrefix]
 		});
-		
+
 		assert.strictEqual(graphServer.test.graphServer, graphServer);
-		
+
 		let result = await graphServer.test.doSomething();
 		assert.strictEqual(result, "true_undefined");
 		graphServer.context.hax = "testing";
@@ -55,7 +55,7 @@ describe(__filename, function() {
 		assert.strictEqual(g.one.graphUrl, "https://www.bing.com/");
 		assert.strictEqual(g.two.graphUrl, "https://www.google.com/");
 	})
-	
+
 	describe("nullToUndefined", function() {
 		const tests = [
 			{
@@ -302,7 +302,7 @@ describe(__filename, function() {
 										]
 									},
 									test2 : {}
-								}, 
+								},
 								"1100px x 2000px",
 								{ test : [] }
 							]
@@ -311,13 +311,13 @@ describe(__filename, function() {
 				}
 			},
 		]
-		
+
 		testArray(tests, function(test) {
 			nullToUndefined(test.item);
 			deepCheck(test.item, test.result);
 		});
 	});
-	
+
 	describe("query", function() {
 		let graphUrl;
 		before(async () => {
@@ -326,11 +326,11 @@ describe(__filename, function() {
 				graphUrl = url;
 			});
 		});
-		
+
 		after(async () => {
 			await server.stop();
 		});
-		
+
 		var tests = [
 			{
 				name : "simple query",
@@ -355,7 +355,7 @@ describe(__filename, function() {
 							books: [
 								{
 									title: 'Harry Potter and the Chamber of Secrets',
-									author: 'J.K. Rowling' 
+									author: 'J.K. Rowling'
 								},
 								{
 									title: 'Jurassic Park',
