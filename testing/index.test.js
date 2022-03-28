@@ -18,8 +18,8 @@ describe(__filename, function() {
 		}
 
 		const graphServer = new GraphServer({
-			graphUrl : "http://fake.com/",
-			prefixes : [TestPrefix]
+			graphUrl: "http://fake.com/",
+			prefixes: [TestPrefix]
 		});
 
 		assert.strictEqual(graphServer.test.graphServer, graphServer);
@@ -43,11 +43,11 @@ describe(__filename, function() {
 		}
 
 		const g = new GraphServer({
-			graphUrl : "https://www.google.com/",
-			prefixes : [
+			graphUrl: "https://www.google.com/",
+			prefixes: [
 				{
-					prefix : PrefixOne,
-					graphUrl : "https://www.bing.com/"
+					prefix: PrefixOne,
+					graphUrl: "https://www.bing.com/"
 				},
 				PrefixTwo
 			]
@@ -60,56 +60,56 @@ describe(__filename, function() {
 	describe("nullToUndefined", function() {
 		const tests = [
 			{
-				name : "top level",
-				args : {
-					item : {
-						name : "Test",
-						imageUrl : null
+				name: "top level",
+				args: {
+					item: {
+						name: "Test",
+						imageUrl: null
 					},
-					result : {
-						name : "Test",
-						imageUrl : undefined
+					result: {
+						name: "Test",
+						imageUrl: undefined
 					}
 				}
 			},
 			{
-				name : "multiple level deep",
-				args : {
-					item : {
-						assets : {
-							imageUrl : null,
-							user : {
+				name: "multiple level deep",
+				args: {
+					item: {
+						assets: {
+							imageUrl: null,
+							user: {
 								name: null
 							}
 						}
 					},
-					result : {
-						assets : {
-							imageUrl : undefined,
-							user : {
-								name : undefined
+					result: {
+						assets: {
+							imageUrl: undefined,
+							user: {
+								name: undefined
 							}
 						}
 					}
 				}
 			},
 			{
-				name : "recursive inside an array",
-				args : {
-					item : {
-						name : "Test",
-						assets : {
-							items : [
+				name: "recursive inside an array",
+				args: {
+					item: {
+						name: "Test",
+						assets: {
+							items: [
 								"image",
 								"1100px x 2000px",
 								null
 							]
 						}
 					},
-					result : {
-						name : "Test",
-						assets : {
-							items : [
+					result: {
+						name: "Test",
+						assets: {
+							items: [
 								"image",
 								"1100px x 2000px"
 							]
@@ -118,41 +118,41 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "root element is empty array",
-				args : {
-					item : [],
-					result : []
+				name: "root element is empty array",
+				args: {
+					item: [],
+					result: []
 				}
 			},
 			{
-				name : "root element is array one null",
-				args : {
-					item : [null],
-					result : []
+				name: "root element is array one null",
+				args: {
+					item: [null],
+					result: []
 				}
 			},
 			{
-				name : "root element is array multiple nulls",
-				args : {
-					item : ["foo", null, "bar", null],
-					result : ["foo", "bar"]
+				name: "root element is array multiple nulls",
+				args: {
+					item: ["foo", null, "bar", null],
+					result: ["foo", "bar"]
 				}
 			},
 			{
-				name : "nested inside an array with one null value",
-				args : {
-					item : {
-						assets : {
-							items : [
+				name: "nested inside an array with one null value",
+				args: {
+					item: {
+						assets: {
+							items: [
 								"image",
 								null,
 								"1100px x 2000px"
 							]
 						}
 					},
-					result : {
-						assets : {
-							items : [
+					result: {
+						assets: {
+							items: [
 								"image",
 								"1100px x 2000px"
 							]
@@ -161,11 +161,11 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nested inside an array with multiple null values",
-				args : {
-					item : {
-						assets : {
-							items : [
+				name: "nested inside an array with multiple null values",
+				args: {
+					item: {
+						assets: {
+							items: [
 								"image",
 								null,
 								"1100px x 2000px",
@@ -173,9 +173,9 @@ describe(__filename, function() {
 							]
 						}
 					},
-					result : {
-						assets : {
-							items : [
+					result: {
+						assets: {
+							items: [
 								"image",
 								"1100px x 2000px"
 							]
@@ -184,27 +184,27 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "nested inside an array with one object",
-				args : {
-					item : {
-						name : "Test",
-						assets : {
-							items : [
+				name: "nested inside an array with one object",
+				args: {
+					item: {
+						name: "Test",
+						assets: {
+							items: [
 								{
-									imageUrl : null,
-									name : "image"
+									imageUrl: null,
+									name: "image"
 								},
 								null
 							]
 						}
 					},
-					result : {
-						name : "Test",
-						assets : {
-							items : [
+					result: {
+						name: "Test",
+						assets: {
+							items: [
 								{
-									imageUrl : undefined,
-									name :"image"
+									imageUrl: undefined,
+									name: "image"
 								}
 							]
 						}
@@ -212,41 +212,41 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "recursive inside an array of multiple objects",
-				args : {
-					item : {
-						name : "Test",
-						assets : {
-							items : [
+				name: "recursive inside an array of multiple objects",
+				args: {
+					item: {
+						name: "Test",
+						assets: {
+							items: [
 								{
-									imageUrl : null,
-									name : "image",
-									test : {
-										foo : "test",
+									imageUrl: null,
+									name: "image",
+									test: {
+										foo: "test",
 										nullKey: null
 									},
-									test2 : {
-										foo : null
+									test2: {
+										foo: null
 									}
 								},
 								"1100px x 2000px",
 								null,
-								{ test : null }
+								{ test: null }
 							]
 						}
 					},
-					result : {
-						name : "Test",
-						assets : {
-							items : [
+					result: {
+						name: "Test",
+						assets: {
+							items: [
 								{
-									imageUrl : undefined,
-									name :"image",
-									test : {
-										foo : "test",
-										nullKey : undefined
+									imageUrl: undefined,
+									name: "image",
+									test: {
+										foo: "test",
+										nullKey: undefined
 									},
-									test2 : {}
+									test2: {}
 								},
 								"1100px x 2000px",
 								{}
@@ -256,17 +256,17 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "recursive inside an array of multiple objects that contain an array with multiple null items",
-				args : {
-					item : {
-						name : "Test",
-						assets : {
-							items : [
+				name: "recursive inside an array of multiple objects that contain an array with multiple null items",
+				args: {
+					item: {
+						name: "Test",
+						assets: {
+							items: [
 								{
-									imageUrl : null,
-									name : "image",
-									test : {
-										foo : "test",
+									imageUrl: null,
+									name: "image",
+									test: {
+										foo: "test",
 										testArray: [
 											null,
 											"item 2",
@@ -274,38 +274,38 @@ describe(__filename, function() {
 											null
 										]
 									},
-									test2 : {
-										foo : null
+									test2: {
+										foo: null
 									}
 								},
 								"1100px x 2000px",
 								null,
 								{
-									test : [
+									test: [
 										null
 									]
 								}
 							]
 						}
 					},
-					result : {
-						name : "Test",
-						assets : {
-							items : [
+					result: {
+						name: "Test",
+						assets: {
+							items: [
 								{
-									imageUrl : undefined,
-									name :"image",
-									test : {
-										foo : "test",
+									imageUrl: undefined,
+									name: "image",
+									test: {
+										foo: "test",
 										testArray: [
 											"item 2",
 											"item 3",
 										]
 									},
-									test2 : {}
+									test2: {}
 								},
 								"1100px x 2000px",
-								{ test : [] }
+								{ test: [] }
 							]
 						}
 					}
@@ -346,10 +346,10 @@ describe(__filename, function() {
 
 		const tests = [
 			{
-				name : "simple query",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "simple query",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query {
 							test_books {
 								success
@@ -361,10 +361,10 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					result : {
-						test_books : {
+					result: {
+						test_books: {
 							success: true,
-							message : "messageValue",
+							message: "messageValue",
 							books: [
 								{
 									title: 'Harry Potter and the Chamber of Secrets',
@@ -380,10 +380,10 @@ describe(__filename, function() {
 				})
 			},
 			{
-				name : "incorrect fields passed",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "incorrect fields passed",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query {
 							test_books {
 								bogusKey
@@ -394,10 +394,10 @@ describe(__filename, function() {
 				})
 			},
 			{
-				name : "incorrect graph url",
-				args : () => ({
-					url : "http://localhost:1234/",
-					query : `
+				name: "incorrect graph url",
+				args: () => ({
+					url: "http://localhost:1234/",
+					query: `
 						query {
 							test_books {
 								success
@@ -408,10 +408,10 @@ describe(__filename, function() {
 				})
 			},
 			{
-				name : "thrown error",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "thrown error",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query {
 							test_books(filter : { throwError : true }) {
 								success
@@ -422,10 +422,10 @@ describe(__filename, function() {
 				})
 			},
 			{
-				name : "auth error",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "auth error",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query {
 							test_books(filter : { authError : true }) {
 								success
@@ -436,24 +436,24 @@ describe(__filename, function() {
 				})
 			},
 			{
-				name : "thrown error in nested resolver",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "thrown error in nested resolver",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query {
 							test_books {
 								throw
 							}
 						}
 					`,
-					error : "Thrown from throw"
+					error: "Thrown from throw"
 				})
 			},
 			{
-				name : "thrown error in 2 nested resolvers",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "thrown error in 2 nested resolvers",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query {
 							test_books {
 								throw
@@ -461,14 +461,14 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					error : "Thrown from throw, Thrown from throw2"
+					error: "Thrown from throw, Thrown from throw2"
 				})
 			},
 			{
-				name : "with variables",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "with variables",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query($filter: test_books_filter) {
 							test_books(filter: $filter) {
 								success,
@@ -476,41 +476,41 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					variables : {
-						filter : {
-							message : "Changed"
+					variables: {
+						filter: {
+							message: "Changed"
 						}
 					},
-					result : {
-						test_books : {
-							success : true,
-							message : "Changed"
+					result: {
+						test_books: {
+							success: true,
+							message: "Changed"
 						}
 					}
 				})
 			},
 			{
-				name : "missing required variables",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "missing required variables",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query($filter: test_books_withRequiredValues) {
 							test_books(withRequiredValues: $filter) {
 								success
 							}
 						}
 					`,
-					variables : {
+					variables: {
 						filter: {}
 					},
 					error: 'Variable "$filter" got invalid value {}; Field "requiredVal" of required type "String!" was not provided.'
 				})
 			},
 			{
-				name : "multiple errors",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "multiple errors",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query {
 							test_books {
 								success
@@ -521,15 +521,15 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					error : 'Cannot query field "bogus" on type "test_result". Did you mean "books"?, Cannot query field "bogus" on type "test_book".'
+					error: 'Cannot query field "bogus" on type "test_result". Did you mean "books"?, Cannot query field "bogus" on type "test_book".'
 				})
 			},
 			{
-				name : "max_body_length and max_content_length",
-				timeout : 5000,
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "max_body_length and max_content_length",
+				timeout: 5000,
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query($filter: test_books_filter) {
 							test_books(filter: $filter) {
 								success,
@@ -537,25 +537,25 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					variables : {
-						filter : {
-							message : 'x'.repeat(15 * 1024 * 1024)
+					variables: {
+						filter: {
+							message: 'x'.repeat(15 * 1024 * 1024)
 						}
 					},
-					result : {
-						test_books : {
-							success : true,
-							message : 'x'.repeat(15 * 1024 * 1024)
+					result: {
+						test_books: {
+							success: true,
+							message: 'x'.repeat(15 * 1024 * 1024)
 						}
 					}
 				})
 			},
 			{
-				name : "clean out null values",
-				args : () => ({
-					url : graphUrl,
-					clean : true,
-					query : `
+				name: "clean out null values",
+				args: () => ({
+					url: graphUrl,
+					clean: true,
+					query: `
 						query($input: test_returns_input) {
 							test_returns(input: $input) {
 								data
@@ -568,24 +568,24 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					variables : {
-						input : {
-							data : "foo",
-							nested : {
-								data : null,
-								nested : {
-									data : null
+					variables: {
+						input: {
+							data: "foo",
+							nested: {
+								data: null,
+								nested: {
+									data: null
 								}
 							}
 						}
 					},
-					result : {
-						test_returns : {
-							data : "foo",
-							nested : {
-								data : undefined,
-								nested : {
-									data : undefined
+					result: {
+						test_returns: {
+							data: "foo",
+							nested: {
+								data: undefined,
+								nested: {
+									data: undefined
 								}
 							}
 						}
@@ -593,10 +593,10 @@ describe(__filename, function() {
 				})
 			},
 			{
-				name : "return null keys if returned",
-				args : () => ({
-					url : graphUrl,
-					query : `
+				name: "return null keys if returned",
+				args: () => ({
+					url: graphUrl,
+					query: `
 						query($input: test_returns_input) {
 							test_returns(input: $input) {
 								data
@@ -609,26 +609,26 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					variables : {
-						input : {
-							data : null,
-							nested : null
+					variables: {
+						input: {
+							data: null,
+							nested: null
 						}
 					},
-					result : {
-						test_returns : {
-							data : null,
-							nested : null
+					result: {
+						test_returns: {
+							data: null,
+							nested: null
 						}
 					}
 				})
 			},
 			{
-				name : "reach into key",
-				args : () => ({
-					url : graphUrl,
-					key : "test_returns.nested.data",
-					query : `
+				name: "reach into key",
+				args: () => ({
+					url: graphUrl,
+					key: "test_returns.nested.data",
+					query: `
 						query($input: test_returns_input) {
 							test_returns(input: $input) {
 								data
@@ -641,15 +641,15 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					variables : {
-						input : {
-							data : "foo",
-							nested : {
-								data : "inner"
+					variables: {
+						input: {
+							data: "foo",
+							nested: {
+								data: "inner"
 							}
 						}
 					},
-					result : "inner"
+					result: "inner"
 				})
 			},
 			{
@@ -735,11 +735,11 @@ describe(__filename, function() {
 			let rtn;
 			try {
 				rtn = await query({
-					query : test.query,
+					query: test.query,
 					url,
-					variables : test.variables,
-					clean : test.clean,
-					key : test.key
+					variables: test.variables,
+					clean: test.clean,
+					key: test.key
 				});
 			} catch (e) {
 				assert.notStrictEqual(test.error, undefined, e);

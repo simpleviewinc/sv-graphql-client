@@ -43,7 +43,7 @@ const typeDefs = gql`
 
 const resolvers = {
 	Query: {
-		test_books(parent, { filter : { throwError = false, authError = false, message } = {} }, context, info) {
+		test_books(parent, { filter: { throwError = false, authError = false, message } = {} }, context, info) {
 			if (throwError) {
 				throw new Error("Test throw!");
 			}
@@ -53,9 +53,9 @@ const resolvers = {
 			}
 			
 			return {
-				success : true,
-				message : message || "messageValue",
-				books : [
+				success: true,
+				message: message || "messageValue",
+				books: [
 					{
 						title: 'Harry Potter and the Chamber of Secrets',
 						author: 'J.K. Rowling'
@@ -71,11 +71,11 @@ const resolvers = {
 			return input;
 		}
 	},
-	test_result : {
-		throw : function() {
+	test_result: {
+		throw: function() {
 			throw new Error("Thrown from throw");
 		},
-		throw2 : function() {
+		throw2: function() {
 			throw new Error("Thrown from throw2");
 		}
 	}

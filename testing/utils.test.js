@@ -7,20 +7,20 @@ describe(__filename, function() {
 	describe("readdirRegex", function() {
 		const tests = [
 			{
-				name : "find txt",
-				args : {
-					regex : /.txt$/,
-					results : [
+				name: "find txt",
+				args: {
+					regex: /.txt$/,
+					results: [
 						"test1.txt",
 						"test2.txt"
 					]
 				}
 			},
 			{
-				name : "find all",
-				args : {
-					regex : /.*/,
-					results : [
+				name: "find all",
+				args: {
+					regex: /.*/,
+					results: [
 						"test1.txt",
 						"test2.txt",
 						"test3.js"
@@ -28,10 +28,10 @@ describe(__filename, function() {
 				}
 			},
 			{
-				name : "find nothing",
-				args : {
-					regex : /.bogus$/,
-					results : []
+				name: "find nothing",
+				args: {
+					regex: /.bogus$/,
+					results: []
 				}
 			}
 		]
