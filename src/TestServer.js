@@ -28,7 +28,7 @@ class TestServer {
 		// });
 
 		this.server = new ApolloServer({
-			schema : await schemaLoader({ paths : this.paths, loaders : this.loaders })
+			schema: await schemaLoader({ paths: this.paths, loaders: this.loaders })
 		});
 		
 		// server.applyMiddleware({
