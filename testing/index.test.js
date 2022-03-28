@@ -1,8 +1,9 @@
-const { GraphServer, nullToUndefined, query } = require("../");
+const { GraphServer, nullToUndefined, query, TestServer } = require("../");
 const assert = require("assert");
 const { testArray } = require("@simpleview/mochalib");
 const { deepCheck } = require("@simpleview/assertlib");
-const server = require("./testServer");
+
+const testLoader = require("./testLoader");
 
 describe(__filename, function() {
 	it("should boot a graphServer with context", async function() {
@@ -319,16 +320,28 @@ describe(__filename, function() {
 	});
 
 	describe("query", function() {
-		let graphUrl;
+		let graphUrl = "http://localhost:80/";
+		let server;
 		before(async () => {
 			// start Server
-			await server.listen().then(({ url }) => {
-				graphUrl = url;
+			server = new TestServer({
+				paths: [
+					`${__dirname}/schemaRoot`,
+					`${__dirname}/schemaPath1`,
+					`${__dirname}/schemaPath2`,
+					`${__dirname}/schemaScalars`,
+					`${__dirname}/schemaDirectives`
+				],
+				loaders: [
+					testLoader
+				]
 			});
+
+			await server.boot();
 		});
 
 		after(async () => {
-			await server.stop();
+			await server.close();
 		});
 
 		var tests = [
@@ -383,7 +396,7 @@ describe(__filename, function() {
 			{
 				name : "incorrect graph url",
 				args : () => ({
-					url : "http://localhost/",
+					url : "http://localhost:1234/",
 					query : `
 						query {
 							test_books {
@@ -391,7 +404,7 @@ describe(__filename, function() {
 							}
 						}
 					`,
-					error: 'connect ECONNREFUSED 127.0.0.1:80'
+					error: 'connect ECONNREFUSED 127.0.0.1:1234'
 				})
 			},
 			{
@@ -638,15 +651,92 @@ describe(__filename, function() {
 					},
 					result : "inner"
 				})
+			},
+			{
+				name: "have functioning scalars via parseLiteral",
+				args: {
+					key: "test_scalar",
+					query: `
+						query {
+							test_scalar(id: "input_value") {
+								id
+								test_scalar
+							}
+						}
+					`,
+					result: {
+						id: "input_value parseLiteral",
+						test_scalar: "output serialized"
+					}
+				}
+			},
+			{
+				name: "have functioning scalars via parseValue",
+				args: {
+					key: "test_scalar",
+					query: `
+						query($id: test_scalar) {
+							test_scalar(id: $id) {
+								id
+								test_scalar
+							}
+						}
+					`,
+					variables: {
+						id: "input_value"
+					},
+					result: {
+						id: "input_value parseValue",
+						test_scalar: "output serialized"
+					}
+				}
+			},
+			{
+				name: "have functioning directives",
+				args: {
+					key: "test_directive_upper",
+					query: `
+						query {
+							test_directive_upper(id: "test")
+						}
+					`,
+					result: "TEST"
+				}
+			},
+			{
+				name: "should load ts files",
+				args: {
+					key: "test_ts",
+					query: `
+						query {
+							test_ts
+						}
+					`,
+					result: true
+				}
+			},
+			{
+				name: "should handle loaders",
+				args: {
+					key: "test_loader",
+					query: `
+						query {
+							test_loader
+						}
+					`,
+					result: true
+				}
 			}
 		]
 
 		testArray(tests, async function(test) {
+			url = test.url ?? graphUrl;
+
 			let rtn;
 			try {
 				rtn = await query({
 					query : test.query,
-					url : test.url,
+					url,
 					variables : test.variables,
 					clean : test.clean,
 					key : test.key
