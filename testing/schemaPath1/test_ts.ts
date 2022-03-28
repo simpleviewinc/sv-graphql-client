@@ -9,7 +9,13 @@ const typeDefs = gql`
 const resolvers = {
 	Query: {
 		test_ts: function() {
-			return true;
+			const wut = 2
+			 *
+			2;
+
+					const badLint = "something";
+
+			return wut;
 		}
 	}
 }
