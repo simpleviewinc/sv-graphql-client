@@ -8,6 +8,7 @@
 		"@simpleview/mochalib": "1.0.2",
 		"apollo-server": "3.6.4",
 		"graphql": "16.3.0",
+		"eslint": "8.12.0",
 		"mocha": "8.3.1"
 	},
 	"dependencies": {
@@ -21,7 +22,9 @@
 	"scripts": {
 		"test": "mocha testing",
 		"docker": "./dev/build && ./dev/run || true",
-		"publish": "./dev/publish"
+		"publish": "./dev/publish",
+		"style": "eslint .",
+		"style:fix": "eslint --fix ."
 	},
 	"repository": {
 		"type": "git",
