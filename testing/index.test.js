@@ -320,7 +320,7 @@ describe(__filename, function() {
 	});
 
 	describe("query", function() {
-		let graphUrl = "http://localhost:80/";
+		const graphUrl = "http://localhost:80/";
 		let server;
 		before(async () => {
 			// start Server
@@ -344,7 +344,7 @@ describe(__filename, function() {
 			await server.close();
 		});
 
-		var tests = [
+		const tests = [
 			{
 				name : "simple query",
 				args : () => ({
@@ -539,13 +539,13 @@ describe(__filename, function() {
 					`,
 					variables : {
 						filter : {
-							message : 'x'.repeat(15*1024*1024)
+							message : 'x'.repeat(15 * 1024 * 1024)
 						}
 					},
 					result : {
 						test_books : {
 							success : true,
-							message : 'x'.repeat(15*1024*1024)
+							message : 'x'.repeat(15 * 1024 * 1024)
 						}
 					}
 				})
@@ -730,7 +730,7 @@ describe(__filename, function() {
 		]
 
 		testArray(tests, async function(test) {
-			url = test.url ?? graphUrl;
+			const url = test.url ?? graphUrl;
 
 			let rtn;
 			try {
@@ -741,7 +741,7 @@ describe(__filename, function() {
 					clean : test.clean,
 					key : test.key
 				});
-			} catch(e) {
+			} catch (e) {
 				assert.notStrictEqual(test.error, undefined, e);
 				assert.strictEqual(e.message, test.error);
 				return;

@@ -1,3 +1,4 @@
+const { defaultFieldResolver } = require("graphql");
 const { mapSchema, getDirective, MapperKind } = require("@graphql-tools/utils");
 const { gql } = require("apollo-server");
 
