@@ -8,7 +8,7 @@ const isNode = typeof window === "undefined";
 if (isNode) {
 	const https = require("https");
 	httpsAgent = new https.Agent({
-		keepAlive : true
+		keepAlive: true
 	});
 }
 
@@ -47,18 +47,18 @@ async function query({
 	try {
 		response = await axios({
 			url,
-			method : "post",
+			method: "post",
 			headers,
 			maxContentLength: Infinity,
-			maxBodyLength : Infinity,
-			data : {
+			maxBodyLength: Infinity,
+			data: {
 				query,
 				variables
 			},
-			httpsAgent : httpsAgent,
+			httpsAgent: httpsAgent,
 			timeout
 		});
-	} catch(e) {
+	} catch (e) {
 		if (e.response && e.response.data && e.response.data.errors !== undefined) {
 			throw new Error(e.response.data.errors.map(val => val.message).join(", "));
 		}
@@ -67,7 +67,7 @@ async function query({
 	}
 
 	if (response.data.errors !== undefined) {
-		var err = new Error(response.data.errors.map(val => val.message).join(", "));
+		const err = new Error(response.data.errors.map(val => val.message).join(", "));
 		err.graphQLErrors = response.data.errors;
 		throw err;
 	}
@@ -92,7 +92,7 @@ function isPlainObject(obj) {
 // Take an object with null values and recursively drop the null values. Useful for cleaning up graphQL responses.
 function nullToUndefined(obj) {
 	if (obj instanceof Array) {
-		for(let [key, val] of Object.entries(obj)) {
+		for (const [, val] of Object.entries(obj)) {
 			if (val === null) {
 				const index = obj.indexOf(val);
 				obj.splice(index, 1);
@@ -101,7 +101,7 @@ function nullToUndefined(obj) {
 			}
 		}
 	} else {
-		for(let i in obj) {
+		for (const i in obj) {
 			if (obj[i] === null) {
 				delete obj[i];
 			} else if (obj[i] instanceof Array) {
@@ -118,7 +118,7 @@ function nullToUndefined(obj) {
  * @param {string} dir - Directory to load files from
  * @param {RegExp} regex - Criteria to match files on
  */
- async function readdirRegex(dir, regex) {
+async function readdirRegex(dir, regex) {
 	const files = await fs.promises.readdir(dir);
 	const rtn = files.filter((file) => {
 		return file.match(regex) !== null;
