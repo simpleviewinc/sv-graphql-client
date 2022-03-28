@@ -4,10 +4,14 @@ const {
 	isPlainObject,
 	nullToUndefined
 } = require("./utils");
+const schemaLoader = require("./schemaLoader");
+const TestServer = require("./TestServer");
 
 module.exports = {
 	GraphServer,
 	isPlainObject,
 	nullToUndefined,
-	query
+	query,
+	schemaLoader,
+	TestServer
 }

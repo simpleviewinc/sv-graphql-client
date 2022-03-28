@@ -1,5 +1,6 @@
 const axios = require("axios");
 const get = require("lodash/get");
+const fs = require("fs");
 let httpsAgent;
 
 const isNode = typeof window === "undefined";
@@ -61,10 +62,10 @@ async function query({
 		if (e.response && e.response.data && e.response.data.errors !== undefined) {
 			throw new Error(e.response.data.errors.map(val => val.message).join(", "));
 		}
-		
+
 		throw e;
 	}
-	
+
 	if (response.data.errors !== undefined) {
 		var err = new Error(response.data.errors.map(val => val.message).join(", "));
 		err.graphQLErrors = response.data.errors;
@@ -112,8 +113,22 @@ function nullToUndefined(obj) {
 	}
 }
 
+/**
+ * Finds all files in a folder matching a regex.
+ * @param {string} dir - Directory to load files from
+ * @param {RegExp} regex - Criteria to match files on
+ */
+ async function readdirRegex(dir, regex) {
+	const files = await fs.promises.readdir(dir);
+	const rtn = files.filter((file) => {
+		return file.match(regex) !== null;
+	});
+	return rtn;
+}
+
 module.exports = {
 	isPlainObject,
 	query,
-	nullToUndefined
+	nullToUndefined,
+	readdirRegex
 }
