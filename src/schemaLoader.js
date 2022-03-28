@@ -29,21 +29,21 @@ const schemaLoader = async function({
 	const schemaTransformers = [];
 	const defs = [];
 
-	for(let path of paths) {
+	for (const path of paths) {
 		const dirResult = await readdirRegex(path, /\.[tj]s$/);
 
-		for(let name of dirResult) {
+		for (const name of dirResult) {
 			const temp = require(`${path}/${name}`);
 			defs.push(temp);
 		}
 	}
 
-	for(let loader of loaders) {
+	for (const loader of loaders) {
 		const temp = await loader();
 		defs.push(temp);
 	}
 
-	for(let def of defs) {
+	for (const def of defs) {
 		if (def.typeDefs !== undefined) {
 			typeDefs.push(def.typeDefs);
 		}
@@ -59,7 +59,7 @@ const schemaLoader = async function({
 
 	let schema = makeExecutableSchema({
 		typeDefs,
-		resolvers : lodash.merge({}, ...resolvers)
+		resolvers: lodash.merge({}, ...resolvers)
 	});
 
 	schemaTransformers.forEach((schemaTransformer) => {
