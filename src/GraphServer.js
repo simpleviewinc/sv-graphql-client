@@ -40,23 +40,23 @@ function GraphServer({ graphUrl, prefixes, context = {} }) {
 	
 	prefixes.forEach(Prefix => {
 		const normalizedPrefix = Prefix instanceof Function ? {
-			prefix : Prefix,
+			prefix: Prefix,
 			graphUrl
 		} : Prefix;
 
 		validate(normalizedPrefix, {
-			type : "object",
-			schema : [
-				{ name : "prefix", type : "function", required : true },
-				{ name : "graphUrl", type : "string", required : true }
+			type: "object",
+			schema: [
+				{ name: "prefix", type: "function", required: true },
+				{ name: "graphUrl", type: "string", required: true }
 			],
-			allowExtraKeys : false,
-			throwOnInvalid : true
+			allowExtraKeys: false,
+			throwOnInvalid: true
 		});
 
 		const prefix = new normalizedPrefix.prefix({
-			graphUrl : normalizedPrefix.graphUrl,
-			graphServer : this
+			graphUrl: normalizedPrefix.graphUrl,
+			graphServer: this
 		});
 		
 		this[prefix.name] = prefix;
