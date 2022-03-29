@@ -87,3 +87,50 @@ const result = await query({
 ## isPlainObject
 
 Simple function for testing if a function is a plain JS object.
+
+## schemaLoader
+
+schemaLoader takes all of the files present in `paths` or `loaders` and merges them into a single schema. This allows you to make your larger schema more maintainable by splitting it up into logical units. An example of a modular schema is outlined in [Modularizing Your GraphQL Schema](https://www.apollographql.com/blog/modularizing-your-graphql-schema-code-d7f71d5ed5f2/).
+
+* args
+  * paths - string[] - Folders containing graphql schema files which export a `GraphModule`.
+  * loaders - function[] - Loaders that will return a `GraphModule`. Use this when you need to load graph definitions that are dynamically generated.
+
+A `GraphModule` is an object of `{ typeDefs, resolvers, schemaTransformers }`, all keys are optional.
+
+Example `GraphModule`:
+```js
+const { gql } = require("apollo-server");
+
+const typeDefs = gql`
+	extend type Query {
+		test_path2: Boolean
+	}
+`;
+
+const resolvers = {
+	Query: {
+		test_path2: function() {
+			return true;
+		}
+	}
+}
+
+module.exports = {
+	typeDefs,
+	resolvers
+}
+```
+
+```js
+const { schemaLoader } = require("@simpleview/sv-mongo-graphql-utils");
+
+const schema = await schemaLoader({
+	paths : ['/app/lib/graphql']
+});
+
+const server = new ApolloServer({
+  schema,
+  ...
+});
+```
