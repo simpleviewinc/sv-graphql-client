@@ -15,7 +15,9 @@ const lodash = require("lodash");
  */
 
 /**
- * Processes a folder of graphql files and converts them into a functioning schema
+ * Generates a schema to be passed to an ApolloServer instance. It can be loaded either with static files from paths or using loader functions.
+ *
+ * Each file or loader should return a {@link GraphModule}.
  * @param {object} args
  * @param {string[]} [args.paths] - The paths where schema files are located
  * @param {LoaderFunction[]} [args.loaders] - Loaders used to dynamically generate graphql definitions

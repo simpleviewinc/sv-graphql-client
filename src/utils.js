@@ -1,3 +1,4 @@
+//@ts-check
 const axios = require("axios");
 const get = require("lodash/get");
 const fs = require("fs");
@@ -89,7 +90,12 @@ function isPlainObject(obj) {
 	return Object.getPrototypeOf(obj) === Object.prototype;
 }
 
-// Take an object with null values and recursively drop the null values. Useful for cleaning up graphQL responses.
+/**
+ * Take an object with null values and recursively drop the null values. Useful for cleaning up graphQL responses. This will mutate the passed in object
+ * @param {object} obj
+ * @returns {void}
+ */
+
 function nullToUndefined(obj) {
 	if (obj instanceof Array) {
 		for (const [, val] of Object.entries(obj)) {
