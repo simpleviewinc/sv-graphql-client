@@ -6,7 +6,7 @@ const lodash = require("lodash");
  * @typedef {object} GraphModule
  * @property {object} typeDefs
  * @property {object} resolvers
- * @property {function[]} schemaTransformers
+ * @property {function[]} schemaTransformers - Use this when you want to create schema directives as per @see https://www.graphql-tools.com/docs/schema-directives#implementing-schema-directives
  */
 
 /**

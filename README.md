@@ -123,7 +123,7 @@ module.exports = {
 ```
 
 ```js
-const { schemaLoader } = require("@simpleview/sv-mongo-graphql-utils");
+const { schemaLoader } = require("@simpleview/sv-graphql-client");
 
 const schema = await schemaLoader({
 	paths : ['/app/lib/graphql']
