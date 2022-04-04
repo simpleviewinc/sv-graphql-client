@@ -1,5 +1,6 @@
+//@ts-check
 const { makeExecutableSchema } = require("@graphql-tools/schema");
-const { readdirRegex } = require("./utils");
+const readdirRegex = require("./readdirRegex");
 const lodash = require("lodash");
 
 /**

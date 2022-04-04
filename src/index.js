@@ -1,17 +1,14 @@
-const GraphServer = require("./GraphServer");
-const {
-	query,
-	isPlainObject,
-	nullToUndefined
-} = require("./utils");
-const schemaLoader = require("./schemaLoader");
+//@ts-check
+const base = require("./base");
+const query = require("./utils/query_node");
 const TestServer = require("./TestServer");
+const schemaLoader = require("./utils/schemaLoader");
+const readdirRegex = require("./utils/readdirRegex");
 
 module.exports = {
-	GraphServer,
-	isPlainObject,
-	nullToUndefined,
+	...base,
 	query,
+	readdirRegex,
 	schemaLoader,
 	TestServer
 }

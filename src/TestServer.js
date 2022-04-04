@@ -1,6 +1,6 @@
 const { ApolloServer } = require("apollo-server");
 
-const schemaLoader = require("./schemaLoader");
+const schemaLoader = require("./utils/schemaLoader");
 
 /**
  * Used for easily booting up a graph server based on a folder of graphql files.
@@ -22,33 +22,13 @@ class TestServer {
 	 * Start the express server, close it via close()
 	 */
 	async boot() {
-		// const app = express();
-		// app.get("/status/", function(req, res) {
-		// 	res.json({ start : Date.now() });
-		// });
-
 		this.server = new ApolloServer({
 			schema: await schemaLoader({ paths: this.paths, loaders: this.loaders })
 		});
-		
-		// server.applyMiddleware({
-		// 	app,
-		// 	path : "/"
-		// });
 
 		await this.server.listen({
 			port: this.port
 		});
-		
-		// return new Promise((resolve, reject) => {
-		// 	const expressServer = app.listen(this.port, function(err) {
-		// 		if (err) { return reject(err); }
-				
-		// 		resolve();
-		// 	});
-
-		// 	this.httpServer = expressServer;
-		// });
 	}
 	/**
 	 * Close the ApolloServer
