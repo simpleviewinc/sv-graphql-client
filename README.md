@@ -39,6 +39,29 @@ const graphServer = new GraphServer({
 
 The endpoints on the graphServer prefix should, in general, match 1-to-1 with the arguments and syntax of the GraphQL schema browser.
 
+## TestServer
+
+`TestServer` is a tool for spinning up a simple GraphQL server that listens on a port and loads some graphql files via `schemaLoader` for it's operations. It's usually used to simplify unit tests.
+
+See [TestServer](src/TestServer.js) for arguments.
+
+```
+const testServer = new TestServer({
+	port: 8080,
+	paths: [
+		"test/graphqlTest"
+	]
+});
+
+// start the server, listen on the port
+await testServer.boot();
+
+// ... run tests ... //
+
+// close the server
+await testServer.close();
+```
+
 ## nullToUndefined
 
 This function will take a graphQL response and convert `null` values to `undefined`. It can be helpful for trimming away fields that weren't returned from graph.
