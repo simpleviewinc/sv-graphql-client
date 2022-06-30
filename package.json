@@ -18,6 +18,9 @@
 		"jsvalidator": "2.0.0",
 		"lodash": "4.17.21"
 	},
+	"peerDependencies": {
+		"graphql": "*"
+	},
 	"main": "src/index.js",
 	"browser": "src/browser.js",
 	"scripts": {
