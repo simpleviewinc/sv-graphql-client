@@ -1,7 +1,0 @@
-#!/bin/bash
-docker run --rm -it \
-	-v $PWD/src:/app/src \
-	-v $PWD/testing:/app/testing \
-	-v $PWD/package.json:/app/package.json \
-	-v $PWD/.eslintrc.json:/app/.eslintrc.json \
-	sv-graphql-client:local /bin/bash

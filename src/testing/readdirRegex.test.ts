@@ -1,7 +1,7 @@
-const { testArray } = require("@simpleview/mochalib");
-const assert = require("assert");
+import { testArray } from "@simpleview/mochalib";
+import assert from "assert";
 
-const readdirRegex = require("../src/utils/readdirRegex");
+import readdirRegex from "../lib/readdirRegex";
 
 describe(__filename, function() {
 	const tests = [

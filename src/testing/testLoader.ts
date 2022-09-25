@@ -1,6 +1,6 @@
-const { gql } = require("apollo-server");
+import { gql } from "apollo-server";
 
-module.exports = async function() {
+export default async function testLoader() {
 	return {
 		typeDefs: gql`
 			extend type Query {

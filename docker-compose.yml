@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  node:
+    build: "."
+    image: sv-graphql-client:local
+    volumes:
+      - "./package.json:/app/package.json"
+      - "./tsconfig.json:/app/tsconfig.json"
+      - "./tsconfig.cjs.json:/app/tsconfig.cjs.json"
+      - "./tsconfig.esm.json:/app/tsconfig.esm.json"
+      - "./.eslintrc.json:/app/.eslintrc.json"
+      - "./src:/app/src"
+      - "./dist:/app/dist"

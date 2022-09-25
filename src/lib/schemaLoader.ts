@@ -1,36 +1,42 @@
-//@ts-check
-const { makeExecutableSchema } = require("@graphql-tools/schema");
-const readdirRegex = require("./readdirRegex");
-const lodash = require("lodash");
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import readdirRegex from "./readdirRegex";
+import lodash from "lodash";
+import { DocumentNode } from "graphql";
+import { IResolvers } from '@graphql-tools/utils';
 
-/**
- * @typedef {object} GraphModule
- * @property {object} typeDefs
- * @property {object} resolvers
- * @property {function[]} schemaTransformers - Use this when you want to create schema directives as per @see https://www.graphql-tools.com/docs/schema-directives#implementing-schema-directives
- */
+interface AnyFunc {
+	(...args: any): any
+}
 
-/**
- * @callback LoaderFunction
- * @returns {Promise<GraphModule>}
- */
+interface GraphModule {
+	typeDefs?: DocumentNode
+	resolvers?: IResolvers<any, any>
+	/**
+	 * Use this when you want to create schema directives as per @see https://www.graphql-tools.com/docs/schema-directives#implementing-schema-directives
+	*/
+	schemaTransformers?: AnyFunc[]
+}
+
+export interface LoaderFunction {
+	(): GraphModule | Promise<GraphModule>
+}
 
 /**
  * Generates a schema to be passed to an ApolloServer instance. It can be loaded either with static files from paths or using loader functions.
  *
  * Each file or loader should return a {@link GraphModule}.
- * @param {object} args
- * @param {string[]} [args.paths] - The paths where schema files are located
- * @param {LoaderFunction[]} [args.loaders] - Loaders used to dynamically generate graphql definitions
  */
-const schemaLoader = async function({
+export default async function schemaLoader({
 	paths = [],
 	loaders = []
+}: {
+	paths?: string[]
+	loaders?: LoaderFunction[]
 }) {
-	const typeDefs = [];
-	const resolvers = [];
-	const schemaTransformers = [];
-	const defs = [];
+	const typeDefs: DocumentNode[] = [];
+	const resolvers: IResolvers<any, any>[] = [];
+	const schemaTransformers: AnyFunc[] = [];
+	const defs: GraphModule[] = [];
 
 	for (const path of paths) {
 		const dirResult = await readdirRegex(path, /\.[tj]s$/);
@@ -71,5 +77,3 @@ const schemaLoader = async function({
 
 	return schema;
 }
-
-module.exports = schemaLoader;

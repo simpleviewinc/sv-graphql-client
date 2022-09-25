@@ -1,9 +1,9 @@
-const { execSync } = require("child_process");
+import { execSync } from "child_process";
 
 describe(__filename, function () {
 	this.timeout(15000);
 
 	it("Run linter", async () => {
-		execSync("npm run style", { stdio: "inherit" });
+		execSync("yarn run style", { stdio: "inherit" });
 	});
 });

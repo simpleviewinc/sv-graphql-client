@@ -1,49 +1,33 @@
-const { GraphServer, query, TestServer } = require("../");
-const assert = require("assert");
-const { testArray } = require("@simpleview/mochalib");
-const { deepCheck } = require("@simpleview/assertlib");
+import { default as GraphServer, GraphServerPrefixArgs } from "../lib/GraphServer";
+import { query, TestServer } from "../";
+import assert from "assert";
+import { testArray } from "@simpleview/mochalib";
+import { deepCheck } from "@simpleview/assertlib";
 
-const testLoader = require("./testLoader");
+import testLoader from "./testLoader";
 
 describe(__filename, function() {
-	it("should have right functions in node export", function() {
-		const functions = require("../src/index");
-		assert.deepStrictEqual(Object.keys(functions), [
-			"GraphServer",
-			"isPlainObject",
-			"nullToUndefined",
-			"query",
-			"readdirRegex",
-			"schemaLoader",
-			"TestServer"
-		]);
-	});
-
-	it("should have right functions in browser export", function() {
-		const functions = require("../src/browser");
-		assert.deepStrictEqual(Object.keys(functions), [
-			"GraphServer",
-			"isPlainObject",
-			"nullToUndefined",
-			"query"
-		]);
-	});
-
 	it("should boot a graphServer with context", async function() {
-		const TestPrefix = function(args) {
-			this.name = "test";
-			this.graphUrl = args.graphUrl;
-			this.graphServer = args.graphServer;
-		}
-
-		TestPrefix.prototype.doSomething = async function() {
-			return `true_${this.graphServer.context.hax}`;
+		class TestPrefix {
+			name: string
+			graphUrl: string
+			graphServer: GraphServer
+			constructor(args: GraphServerPrefixArgs) {
+				this.name = "test";
+				this.graphUrl = args.graphUrl;
+				this.graphServer = args.graphServer;
+			}
+			doSomething() {
+				return `true_${this.graphServer.context.hax}`;
+			}
 		}
 
 		const graphServer = new GraphServer({
 			graphUrl: "http://fake.com/",
 			prefixes: [TestPrefix]
-		});
+		}) as GraphServer & {
+			test: TestPrefix
+		};
 
 		assert.strictEqual(graphServer.test.graphServer, graphServer);
 
@@ -55,14 +39,22 @@ describe(__filename, function() {
 	});
 
 	it("should boot a graphServer with different urls for different prefixes", async function() {
-		const PrefixOne = function(args) {
-			this.name = "one";
-			this.graphUrl = args.graphUrl;
+		class PrefixOne {
+			name: string
+			graphUrl: string
+			constructor(args: GraphServerPrefixArgs) {
+				this.name = "one";
+				this.graphUrl = args.graphUrl;
+			}
 		}
 
-		const PrefixTwo = function(args) {
-			this.name = "two";
-			this.graphUrl = args.graphUrl;
+		class PrefixTwo {
+			name: string
+			graphUrl: string
+			constructor(args: GraphServerPrefixArgs) {
+				this.name = "two";
+				this.graphUrl = args.graphUrl;
+			}
 		}
 
 		const g = new GraphServer({
@@ -78,7 +70,7 @@ describe(__filename, function() {
 
 		assert.strictEqual(g.one.graphUrl, "https://www.bing.com/");
 		assert.strictEqual(g.two.graphUrl, "https://www.google.com/");
-	})
+	});
 
 	describe("query", function() {
 		const graphUrl = "http://localhost:80/";
@@ -503,8 +495,9 @@ describe(__filename, function() {
 					key: test.key
 				});
 			} catch (e) {
-				assert.notStrictEqual(test.error, undefined, e);
-				assert.strictEqual(e.message, test.error);
+				const err = e as Error;
+				assert.notStrictEqual(test.error, undefined, err);
+				assert.strictEqual(err.message, test.error);
 				return;
 			}
 

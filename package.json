@@ -6,15 +6,23 @@
 	"devDependencies": {
 		"@simpleview/assertlib": "1.2.0",
 		"@simpleview/mochalib": "1.0.2",
-		"graphql": "16.3.0",
+		"@tsconfig/node16": "1.0.3",
+		"@types/mocha": "9.1.1",
+		"@types/node": "18.7.21",
 		"eslint": "8.12.0",
-		"mocha": "8.3.1"
+		"graphql": "16.3.0",
+		"mocha": "8.3.1",
+		"ts-mocha": "10.0.0",
+		"ts-node": "10.9.1",
+		"ts-node-dev": "2.0.0",
+		"typescript": "4.8.3"
 	},
 	"dependencies": {
-		"axios": "0.24.0",
-		"apollo-server": "3.6.7",
 		"@graphql-tools/schema": "8.3.5",
 		"@graphql-tools/utils": "8.6.5",
+		"apollo-server": "3.6.7",
+		"axios": "0.24.0",
+		"browser-or-node": "2.0.0",
 		"jsvalidator": "2.0.0",
 		"lodash": "4.17.21"
 	},
@@ -24,15 +32,18 @@
 	"main": "src/index.js",
 	"browser": "src/browser.js",
 	"scripts": {
-		"test": "mocha testing",
-		"docker": "./dev/build && ./dev/run || true",
-		"publish": "./dev/publish",
+		"test": "ts-mocha --paths './src/**/*.test.ts'",
+		"docker": "./src/scripts/run || true",
+		"publish": "./src/scripts/publish",
 		"style": "eslint .",
-		"style:fix": "eslint --fix ."
+		"style:fix": "eslint --fix .",
+		"sync-state": "bash ./src/scripts/sync-state",
+		"types": "tsc -p tsconfig.json --noEmit"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/simpleviewinc/sv-graphql-client"
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"packageManager": "yarn@3.2.1"
 }

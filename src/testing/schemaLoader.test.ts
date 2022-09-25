@@ -1,8 +1,8 @@
-const { testArray } = require("@simpleview/mochalib");
-const { deepStrictEqual } = require("assert");
+import { testArray } from "@simpleview/mochalib";
+import { deepStrictEqual } from "assert";
 
-const { schemaLoader } = require("../");
-const testLoader = require("./testLoader");
+import { schemaLoader } from "../";
+import testLoader from "./testLoader";
 
 const baseDirectives = [
 	"include",
@@ -132,7 +132,7 @@ describe(__filename, function() {
 				}
 			}
 		]
-	
+
 		testArray(tests, async function(test) {
 			const testDirectives = (test.directives ?? baseDirectives).sort();
 			const testTypes = (test.types ?? baseTypes).sort();
@@ -143,8 +143,11 @@ describe(__filename, function() {
 				loaders: test.loaders
 			});
 
+			//@ts-expect-error - accessing private variable
 			const directives = res._directives.map(val => val.name).sort();
+			//@ts-expect-error - accessing private variable
 			const queryFields = Object.keys(res._queryType._fields).sort();
+			//@ts-expect-error - access private variable
 			const types = Object.keys(res._typeMap).sort();
 
 			deepStrictEqual(types, testTypes);

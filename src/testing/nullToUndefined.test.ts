@@ -1,7 +1,6 @@
-//@ts-check
-const { testArray } = require("@simpleview/mochalib");
-const { deepCheck } = require("@simpleview/assertlib");
-const nullToUndefined = require("../src/utils/nullToUndefined");
+import { testArray } from "@simpleview/mochalib";
+import { deepCheck } from "@simpleview/assertlib";
+import nullToUndefined from "../lib/nullToUndefined";
 
 describe(__filename, function() {
 	const tests = [

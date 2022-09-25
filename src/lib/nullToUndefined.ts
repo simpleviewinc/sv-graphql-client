@@ -1,12 +1,9 @@
-//@ts-check
-const isPlainObject = require("./isPlainObject");
+import isPlainObject from "./isPlainObject";
 
 /**
  * Take an object with null values and recursively drop the null values. Useful for cleaning up graphQL responses. This will mutate the passed in object
- * @param {object} obj
- * @returns {void}
  */
-function nullToUndefined(obj) {
+export default function nullToUndefined(obj: any) {
 	if (obj instanceof Array) {
 		for (const [, val] of Object.entries(obj)) {
 			if (val === null) {
