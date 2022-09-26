@@ -29,9 +29,26 @@
 	"peerDependencies": {
 		"graphql": "*"
 	},
-	"main": "src/index.js",
-	"browser": "src/browser.js",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/types/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
+		},
+		"./lib/*": {
+			"types": "./dist/types/lib/*.d.ts",
+			"import": "./dist/esm/lib/*.js",
+			"require": "./dist/cjs/lib/*.js"
+		}
+	},
 	"scripts": {
+		"build": "yarn run build:cjs && yarn run build:esm && yarn run build:types",
+		"build:esm": "rm -rf ./dist/esm && tsc --project ./tsconfig.esm.json",
+		"build:cjs": "rm -rf ./dist/cjs && tsc --project ./tsconfig.cjs.json",
+		"build:types": "rm -rf ./dist/types && tsc --project ./tsconfig.types.json",
 		"test": "ts-mocha --paths './src/**/*.test.ts'",
 		"docker": "./src/scripts/run || true",
 		"publish": "./src/scripts/publish",

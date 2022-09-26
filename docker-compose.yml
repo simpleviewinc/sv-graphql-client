@@ -8,6 +8,7 @@ services:
       - "./tsconfig.json:/app/tsconfig.json"
       - "./tsconfig.cjs.json:/app/tsconfig.cjs.json"
       - "./tsconfig.esm.json:/app/tsconfig.esm.json"
+      - "./tsconfig.types.json:/app/tsconfig.types.json"
       - "./.eslintrc.json:/app/.eslintrc.json"
       - "./src:/app/src"
       - "./dist:/app/dist"
