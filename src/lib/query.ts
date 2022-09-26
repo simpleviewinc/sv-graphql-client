@@ -4,9 +4,10 @@ import { get } from "lodash";
 import { isNode } from "browser-or-node";
 import pMemoize from "p-memoize-cjs";
 import { Agent } from "https";
+const requireDynamically = eval('require');
 
 async function getAgent() {
-	const { Agent } = await import("https");
+	const { Agent } = requireDynamically("https");
 
 	return new Agent({
 		keepAlive: true
