@@ -62,5 +62,6 @@
 		"url": "https://github.com/simpleviewinc/sv-graphql-client"
 	},
 	"license": "MIT",
-	"packageManager": "yarn@3.2.1"
+	"packageManager": "yarn@3.2.1",
+	"sideEffects": false
 }
