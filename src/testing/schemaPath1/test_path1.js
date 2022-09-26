@@ -20,16 +20,25 @@ const typeDefs = gql`
 	}
 
 	type test_return {
-		data: String
-		nested: test_return
+		input: test_return_input
+		headers: test_return_headers
 	}
-	
+
+	type test_return_input {
+		data: String
+		nested: test_return_input
+	}
+
+	type test_return_headers {
+		authorization: String
+	}
+
 	input test_books_filter {
 		throwError : Boolean
 		authError : Boolean
 		message : String
 	}
-	
+
 	input test_books_withRequiredValues {
 		requiredVal : String!
 		nonRequiredVal : String
@@ -47,11 +56,11 @@ const resolvers = {
 			if (throwError) {
 				throw new Error("Test throw!");
 			}
-			
+
 			if (authError) {
 				throw new AuthenticationError("Test throw!");
 			}
-			
+
 			return {
 				success: true,
 				message: message || "messageValue",
@@ -68,7 +77,10 @@ const resolvers = {
 			}
 		},
 		test_returns(parent, { input }, context, info) {
-			return input;
+			return {
+				input,
+				headers: context.headers
+			}
 		}
 	},
 	test_result: {

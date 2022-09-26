@@ -36,6 +36,8 @@ const path1Types = [
 	"test_books_filter",
 	"test_result",
 	"test_return",
+	"test_return_headers",
+	"test_return_input",
 	"test_books_withRequiredValues",
 	"test_returns_input"
 ]

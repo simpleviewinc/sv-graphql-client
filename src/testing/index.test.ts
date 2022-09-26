@@ -87,7 +87,12 @@ describe(__filename, function() {
 				],
 				loaders: [
 					testLoader
-				]
+				],
+				context: ({ req }) => {
+					return {
+						headers: req.headers
+					}
+				}
 			});
 
 			await server.boot();
@@ -311,11 +316,13 @@ describe(__filename, function() {
 					query: `
 						query($input: test_returns_input) {
 							test_returns(input: $input) {
-								data
-								nested {
+								input {
 									data
 									nested {
 										data
+										nested {
+											data
+										}
 									}
 								}
 							}
@@ -334,11 +341,13 @@ describe(__filename, function() {
 					},
 					result: {
 						test_returns: {
-							data: "foo",
-							nested: {
-								data: undefined,
+							input: {
+								data: "foo",
 								nested: {
-									data: undefined
+									data: undefined,
+									nested: {
+										data: undefined
+									}
 								}
 							}
 						}
@@ -352,11 +361,13 @@ describe(__filename, function() {
 					query: `
 						query($input: test_returns_input) {
 							test_returns(input: $input) {
-								data
-								nested {
+								input {
 									data
 									nested {
 										data
+										nested {
+											data
+										}
 									}
 								}
 							}
@@ -370,8 +381,10 @@ describe(__filename, function() {
 					},
 					result: {
 						test_returns: {
-							data: null,
-							nested: null
+							input: {
+								data: null,
+								nested: null
+							}
 						}
 					}
 				})
@@ -380,15 +393,17 @@ describe(__filename, function() {
 				name: "reach into key",
 				args: () => ({
 					url: graphUrl,
-					key: "test_returns.nested.data",
+					key: "test_returns.input.nested.data",
 					query: `
 						query($input: test_returns_input) {
 							test_returns(input: $input) {
-								data
-								nested {
+								input {
 									data
 									nested {
 										data
+										nested {
+											data
+										}
 									}
 								}
 							}
@@ -403,6 +418,74 @@ describe(__filename, function() {
 						}
 					},
 					result: "inner"
+				})
+			},
+			{
+				name: "pass on token as string",
+				args: () => ({
+					url: graphUrl,
+					query: `
+						query($input: test_returns_input) {
+							test_returns(input: $input) {
+								input {
+									data
+								}
+								headers {
+									authorization
+								}
+							}
+						}
+					`,
+					token: "my token",
+					variables: {
+						input: {
+							data: "foo"
+						}
+					},
+					result: {
+						test_returns: {
+							input: {
+								data: "foo"
+							},
+							headers: {
+								authorization: "Bearer my token"
+							}
+						}
+					}
+				})
+			},
+			{
+				name: "pass on token as function",
+				args: () => ({
+					url: graphUrl,
+					query: `
+						query($input: test_returns_input) {
+							test_returns(input: $input) {
+								input {
+									data
+								}
+								headers {
+									authorization
+								}
+							}
+						}
+					`,
+					token: async () => "my async token",
+					variables: {
+						input: {
+							data: "foo"
+						}
+					},
+					result: {
+						test_returns: {
+							input: {
+								data: "foo"
+							},
+							headers: {
+								authorization: "Bearer my async token"
+							}
+						}
+					}
 				})
 			},
 			{
@@ -492,7 +575,8 @@ describe(__filename, function() {
 					url,
 					variables: test.variables,
 					clean: test.clean,
-					key: test.key
+					key: test.key,
+					token: test.token
 				});
 			} catch (e) {
 				const err = e as Error;

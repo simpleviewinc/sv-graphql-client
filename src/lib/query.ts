@@ -35,6 +35,11 @@ export default async function query<T = any>({
 	timeout
 }: QueryOptions): Promise<T> {
 	if (token) {
+		// If the token is a function, we call it to get the actual token
+		if (token instanceof Function) {
+			token = await token();
+		}
+
 		headers.Authorization = `Bearer ${token}`
 	}
 
