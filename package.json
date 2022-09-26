@@ -36,7 +36,8 @@
 		".": {
 			"types": "./dist/types/index.d.ts",
 			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js"
+			"require": "./dist/cjs/index.js",
+			"browser": "./dist/esm/browser.js"
 		},
 		"./lib/*": {
 			"types": "./dist/types/lib/*.d.ts",
