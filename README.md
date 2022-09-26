@@ -18,7 +18,7 @@ npm install @simpleview/sv-graphql-client
 	* graphUrl - string - Fully qualified URL pointing to the graphURL server.
 	* context - object - Context object used for handling token/acct_id
 		* acct_id - string - The acct_id that the user is attempting to access. `acct_id` is required for any endpoints on `admin`.
-		* token - string - The token returned from the auth system. Token is required for accessing any of the non-login mechanics.
+		* token - `string` | `async () => string` - The token returned from the auth system. Token is required for accessing any of the non-login mechanics.
 	* prefixes - array of `class` - Prefixes which encasulate the behavior of the graphQL apis.
 
 In most cases you will be setting the `context` at runtime. If so, manually update the context via setting `graphServer.context.acct_id = "x"`.
@@ -85,7 +85,7 @@ Wrapper function to make it easier to talk to `sv-graphql` directly.
 	* query - string - The graphQL query string. Usually best passed with JS template tag syntax.
 	* variables - obj - If you're query utilizes variables, pass them on this object.
 	* url - string - The URL of the graphQL endpoint.
-	* token - string - The token which will be passed on the `Authorization` header as a `Bearer` token.
+	* token - `string` | `async () => string` - The token which will be passed on the `Authorization` header as a `Bearer` token. If using a function it will be called to return the token.
 	* headers - obj - An object of headers to append to the request
 	* key - string - Whether to reach and return a specific sub-key of the return.
 	* clean - boolean - Whether to automatically run nullToUndefined on the result set to clean it.
@@ -157,3 +157,9 @@ const server = new ApolloServer({
   ...
 });
 ```
+# Publishing
+
+`sudo npm run docker`
+`yarn run build`
+`exit`
+`sudo npm run publish VERSION`
