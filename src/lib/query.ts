@@ -2,14 +2,18 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import nullToUndefined from "./nullToUndefined";
 import { get } from "lodash";
 import { isNode } from "browser-or-node";
+import pMemoize from "p-memoize-cjs";
+import { Agent } from "https";
 
-let httpsAgent: any;
-if (isNode) {
-	const { Agent } = require("https");
-	httpsAgent = new Agent({
+async function getAgent() {
+	const { Agent } = await import("https");
+
+	return new Agent({
 		keepAlive: true
 	});
 }
+
+const getAgentMemo = pMemoize(getAgent);
 
 interface QueryOptions {
 	query: string
@@ -34,6 +38,12 @@ export default async function query<T = any>({
 	clean = false,
 	timeout
 }: QueryOptions): Promise<T> {
+	let httpsAgent: Agent | undefined = undefined;
+
+	if (isNode) {
+		httpsAgent = await getAgentMemo();
+	}
+
 	if (token) {
 		// If the token is a function, we call it to get the actual token
 		if (token instanceof Function) {
