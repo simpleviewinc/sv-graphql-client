@@ -4,6 +4,9 @@ import { get } from "lodash";
 import { isNode } from "browser-or-node";
 import pMemoize from "p-memoize-cjs";
 import { Agent } from "https";
+
+// This hack is to ensure that when this code is loaded in a webpack environment it doesn't recurse into the require("https") call
+// Forcing the front-end to load the https module
 const requireDynamically = eval('require');
 
 async function getAgent() {
