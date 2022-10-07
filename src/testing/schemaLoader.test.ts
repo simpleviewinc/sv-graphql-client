@@ -3,6 +3,7 @@ import { deepStrictEqual } from "assert";
 
 import { schemaLoader } from "../";
 import testLoader from "./testLoader";
+import testLoaderArray from "./testLoaderArray";
 
 const baseDirectives = [
 	"include",
@@ -130,6 +131,23 @@ describe(__filename, function() {
 					],
 					queryFields: [
 						"test_loader"
+					]
+				}
+			},
+			{
+				name: "loader with array loaders",
+				args: {
+					paths: [
+						`${__dirname}/schemaRoot`
+					],
+					loaders: [
+						testLoader,
+						testLoaderArray
+					],
+					queryFields: [
+						"test_loader",
+						"test_loader_array_1",
+						"test_loader_array_2"
 					]
 				}
 			}

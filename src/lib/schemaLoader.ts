@@ -8,7 +8,7 @@ interface AnyFunc {
 	(...args: any): any
 }
 
-interface GraphModule {
+export interface GraphModule {
 	typeDefs?: DocumentNode
 	resolvers?: IResolvers<any, any>
 	/**
@@ -18,7 +18,7 @@ interface GraphModule {
 }
 
 export interface LoaderFunction {
-	(): GraphModule | Promise<GraphModule>
+	(): GraphModule | GraphModule[] | Promise<GraphModule> | Promise<GraphModule[]>
 }
 
 /**
@@ -49,7 +49,8 @@ export default async function schemaLoader({
 
 	for (const loader of loaders) {
 		const temp = await loader();
-		defs.push(temp);
+		const arr = temp instanceof Array ? temp : [temp];
+		defs.push(...arr);
 	}
 
 	for (const def of defs) {
