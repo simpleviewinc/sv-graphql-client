@@ -19,7 +19,7 @@ async function getAgent() {
 
 const getAgentMemo = pMemoize(getAgent);
 
-interface QueryOptions {
+export interface QueryOptions {
 	query: string
 	variables?: Record<string, any>
 	url: string

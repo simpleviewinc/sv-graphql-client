@@ -1,4 +1,5 @@
 import { validate } from "jsvalidator";
+import { QueryOptions } from "./query";
 
 export interface GraphServerPrefixArgs {
 	graphUrl: string
@@ -26,8 +27,8 @@ interface GraphServerPrefixObj {
 
 type GraphServerPrefix = GraphServerPrefixObj | GraphServerPrefixClass
 
-interface GraphContext {
-	token?: string
+export interface GraphContext {
+	token?: QueryOptions["token"]
 	acct_id?: string
 	[key: string]: any
 }
