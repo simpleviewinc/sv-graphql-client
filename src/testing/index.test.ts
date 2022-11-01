@@ -489,6 +489,30 @@ describe(__filename, function() {
 				})
 			},
 			{
+				name: "utilize operationName if passed",
+				args: {
+					query: `
+						query first {
+							test_books {
+								success
+							}
+						}
+
+						query second {
+							test_books {
+								message
+							}
+						}
+					`,
+					operationName: "second",
+					result: {
+						test_books: {
+							message: "messageValue"
+						}
+					}
+				}
+			},
+			{
 				name: "have functioning scalars via parseLiteral",
 				args: {
 					key: "test_scalar",
@@ -576,7 +600,8 @@ describe(__filename, function() {
 					variables: test.variables,
 					clean: test.clean,
 					key: test.key,
-					token: test.token
+					token: test.token,
+					operationName: test.operationName
 				});
 			} catch (e) {
 				const err = e as Error;

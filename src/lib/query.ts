@@ -29,6 +29,8 @@ export interface QueryOptions {
 	/** Whether to automatically run nullToUndefined on the result set to clean it. */
 	clean?: boolean
 	timeout?: number
+	/** Name of the operation if passing multiple in one query */
+	operationName?: string
 }
 
 export default async function query<T = any>({
@@ -39,7 +41,8 @@ export default async function query<T = any>({
 	headers = {},
 	key,
 	clean = false,
-	timeout
+	timeout,
+	operationName
 }: QueryOptions): Promise<T> {
 	let httpsAgent: Agent | undefined = undefined;
 
@@ -71,7 +74,8 @@ export default async function query<T = any>({
 			maxBodyLength: Infinity,
 			data: {
 				query,
-				variables
+				variables,
+				operationName
 			},
 			httpsAgent: httpsAgent,
 			timeout
