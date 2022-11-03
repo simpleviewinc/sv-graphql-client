@@ -2,6 +2,7 @@ import { validate } from "jsvalidator";
 import { QueryOptions } from "./query";
 
 export interface GraphServerPrefixArgs {
+	name?: string
 	graphUrl: string
 	graphServer: GraphServer
 }
@@ -11,16 +12,11 @@ interface GraphServerPrefixInstance {
 }
 
 type GraphServerPrefixClass = {
-	new ({
-		graphUrl,
-		graphServer
-	}: {
-		graphUrl: string
-		graphServer: GraphServer
-	}): GraphServerPrefixInstance
+	new (args: GraphServerPrefixArgs): GraphServerPrefixInstance
 }
 
 interface GraphServerPrefixObj {
+	name?: string
 	graphUrl: string
 	prefix: GraphServerPrefixClass
 }
@@ -58,6 +54,7 @@ class GraphServer {
 			validate(normalizedPrefix, {
 				type: "object",
 				schema: [
+					{ name: "name", type: "string" },
 					{ name: "prefix", type: "function", required: true },
 					{ name: "graphUrl", type: "string", required: true }
 				],
@@ -66,11 +63,13 @@ class GraphServer {
 			});
 
 			const prefix = new normalizedPrefix.prefix({
+				name: normalizedPrefix.name,
 				graphUrl: normalizedPrefix.graphUrl,
 				graphServer: this
 			});
 
-			this[prefix.name] = prefix;
+			// make it available at the passed name or the one coming from the Prefix class
+			this[normalizedPrefix.name ?? prefix.name] = prefix;
 		});
 	}
 }

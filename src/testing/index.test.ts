@@ -57,6 +57,15 @@ describe(__filename, function() {
 			}
 		}
 
+		class PrefixThree {
+			name: string
+			graphUrl: string
+			constructor(args: GraphServerPrefixArgs) {
+				this.name = args.name ?? "three";
+				this.graphUrl = args.graphUrl;
+			}
+		}
+
 		const g = new GraphServer({
 			graphUrl: "https://www.google.com/",
 			prefixes: [
@@ -64,12 +73,23 @@ describe(__filename, function() {
 					prefix: PrefixOne,
 					graphUrl: "https://www.bing.com/"
 				},
-				PrefixTwo
+				PrefixTwo,
+				{
+					prefix: PrefixThree,
+					graphUrl: "https://www.yelp.com/"
+				},
+				{
+					name: "three_changed",
+					prefix: PrefixThree,
+					graphUrl: "https://www.yahoo.com/"
+				}
 			]
 		});
 
 		assert.strictEqual(g.one.graphUrl, "https://www.bing.com/");
 		assert.strictEqual(g.two.graphUrl, "https://www.google.com/");
+		assert.strictEqual(g.three.graphUrl, "https://www.yelp.com/");
+		assert.strictEqual(g.three_changed.graphUrl, "https://www.yahoo.com/");
 	});
 
 	describe("query", function() {
