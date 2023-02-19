@@ -25,5 +25,3 @@ export default function nullToUndefined(obj: any) {
 		}
 	}
 }
-
-module.exports = nullToUndefined;
