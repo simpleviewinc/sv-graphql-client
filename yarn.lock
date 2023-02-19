@@ -455,6 +455,8 @@ __metadata:
     "@simpleview/assertlib": 1.2.0
     "@simpleview/mochalib": 1.0.2
     "@tsconfig/node16": 1.0.3
+    "@types/mocha": 9.1.1
+    "@types/node": 18.7.21
     apollo-server: 3.6.7
     axios: 0.24.0
     browser-or-node: 2.0.0
@@ -463,6 +465,7 @@ __metadata:
     jsvalidator: 2.0.0
     lodash: 4.17.21
     mocha: 8.3.1
+    p-memoize-cjs: 7.1.0
     ts-mocha: 10.0.0
     ts-node: 10.9.1
     ts-node-dev: 2.0.0
@@ -597,7 +600,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/mocha@npm:9.1.1":
+  version: 9.1.1
+  resolution: "@types/mocha@npm:9.1.1"
+  checksum: 516077c0acd9806dc78317f88aaac0df5aaf0bdc2f63dfdadeabdf0b0137953b6ca65472e6ff7c30bc93ce4e0ae76eae70e8d46764b9a8eae4877a928b6ef49a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:*, @types/node@npm:18.7.21":
   version: 18.7.21
   resolution: "@types/node@npm:18.7.21"
   checksum: 9e0558dd44766fb3b1b26815e9877849d8f1188115e0d2bee540cee2c5a11f90e4c00ee059edae8ea018e7f66217e4bf53271536c9a6fd05e33f713b8daa4c66
@@ -2122,9 +2132,9 @@ __metadata:
   linkType: hard
 
 "http-cache-semantics@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "http-cache-semantics@npm:4.1.0"
-  checksum: 974de94a81c5474be07f269f9fd8383e92ebb5a448208223bfb39e172a9dbc26feff250192ecc23b9593b3f92098e010406b0f24bd4d588d631f80214648ed42
+  version: 4.1.1
+  resolution: "http-cache-semantics@npm:4.1.1"
+  checksum: 83ac0bc60b17a3a36f9953e7be55e5c8f41acc61b22583060e8dedc9dd5e3607c823a88d0926f9150e571f90946835c7fe150732801010845c72cd8bbff1a236
   languageName: node
   linkType: hard
 
@@ -2985,6 +2995,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-memoize-cjs@npm:7.1.0":
+  version: 7.1.0
+  resolution: "p-memoize-cjs@npm:7.1.0"
+  checksum: badb6cb627bfe14b2ee1228d1371d04b403fbaeb9452144e0084d795410590c858ac043c154383630e47c44aaacb22e614b9a806b9c4c79d35ac1eeb4106ff05
+  languageName: node
+  linkType: hard
+
 "parent-module@npm:^1.0.0":
   version: 1.0.1
   resolution: "parent-module@npm:1.0.1"
@@ -3744,11 +3761,11 @@ __metadata:
 
 "typescript@patch:typescript@4.8.3#~builtin<compat/typescript>":
   version: 4.8.3
-  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 2222d2382fb3146089b1d27ce2b55e9d1f99cc64118f1aba75809b693b856c5d3c324f052f60c75b577947fc538bc1c27bad0eb76cbdba9a63a253489504ba7e
+  checksum: 0404a09c625df01934ef774b45ce1ca57ccae41cd625fcdbb82056715320d9329e70d9d75c2c732ec6ef947444ca978c189a332b71fa21f5c1437d5a83e24906
   languageName: node
   linkType: hard
 
