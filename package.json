@@ -36,23 +36,16 @@
 	"exports": {
 		".": {
 			"types": "./dist/types/index.d.ts",
-			"import": {
-				"browser": "./dist/esm/browser.js",
-				"default": "./dist/esm/index.js"
-			},
-			"require": {
-				"browser": "./dist/cjs/browser.js",
-				"default": "./dist/cjs/index.js"
-			}
+			"browser": "./dist/cjs/browser.js",
+			"default": "./dist/cjs/index.js"
 		},
 		"./lib/*": {
 			"types": "./dist/types/lib/*.d.ts",
-			"import": "./dist/esm/lib/*.js",
-			"require": "./dist/cjs/lib/*.js"
+			"default": "./dist/cjs/lib/*.js"
 		}
 	},
 	"scripts": {
-		"build": "yarn run build:cjs && yarn run build:esm && yarn run build:types",
+		"build": "yarn run build:cjs && yarn run build:types",
 		"build:esm": "rm -rf ./dist/esm && tsc --project ./tsconfig.esm.json",
 		"build:cjs": "rm -rf ./dist/cjs && tsc --project ./tsconfig.cjs.json",
 		"build:types": "rm -rf ./dist/types && tsc --project ./tsconfig.types.json",
