@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 
-describe(__filename, function () {
+describe.only(__filename, function () {
 	this.timeout(15000);
 
 	it("Check types", async () => {

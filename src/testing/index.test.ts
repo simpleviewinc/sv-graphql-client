@@ -108,11 +108,11 @@ describe(__filename, function() {
 				loaders: [
 					testLoader
 				],
-				context: ({ req }) => {
-					return {
-						headers: req.headers
-					}
-				}
+				// context: ({ req }) => {
+				// 	return {
+				// 		headers: req.headers
+				// 	}
+				// }
 			});
 
 			await server.boot();

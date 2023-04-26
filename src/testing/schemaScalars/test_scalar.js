@@ -1,5 +1,5 @@
 const { GraphQLScalarType, Kind } = require("graphql");
-const { gql } = require("apollo-server");
+const gql = require("graphql-tag");
 
 const testScalar = new GraphQLScalarType({
 	name: "test_scalar",
