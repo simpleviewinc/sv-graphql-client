@@ -108,7 +108,7 @@ describe(__filename, function() {
 				loaders: [
 					testLoader
 				],
-				context: ({ req }) => {
+				context: async ({ req }) => {
 					return {
 						headers: req.headers
 					}

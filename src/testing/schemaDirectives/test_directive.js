@@ -1,6 +1,6 @@
 const { defaultFieldResolver } = require("graphql");
 const { mapSchema, getDirective, MapperKind } = require("@graphql-tools/utils");
-const { gql } = require("apollo-server");
+const gql = require( "graphql-tag");
 
 const typeDefs = gql`
 	directive @test_directive_upper on FIELD_DEFINITION

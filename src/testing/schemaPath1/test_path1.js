@@ -1,4 +1,5 @@
-const { gql, AuthenticationError } = require('apollo-server');
+const { GraphQLError } = require("graphql");
+const gql = require("graphql-tag");
 
 const typeDefs = gql`
 	extend type Query {
@@ -58,7 +59,11 @@ const resolvers = {
 			}
 
 			if (authError) {
-				throw new AuthenticationError("Test throw!");
+				throw new GraphQLError("Test throw!", {
+					extensions: {
+						code: "UNAUTHENTICATED"
+					},
+				});
 			}
 
 			return {
