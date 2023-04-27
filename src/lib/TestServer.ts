@@ -1,11 +1,9 @@
-import { ApolloServer } from "@apollo/server";
+import { ApolloServer, BaseContext } from "@apollo/server";
 import { startStandaloneServer, StartStandaloneServerOptions } from "@apollo/server/standalone";
 
 import schemaLoader, { LoaderFunction } from "./schemaLoader";
 
-// type ApolloContext = ConstructorParameters<typeof ApolloServer>[0]["context"]
-// type ApolloContext = ConstructorParameters<typeof startStandaloneServer>[1]["context"];
-type ApolloContext = StartStandaloneServerOptions["context"];
+type ApolloContext = StartStandaloneServerOptions<BaseContext>["context"];
 
 /**
  * Used for easily booting up a graph server based on a folder of graphql files.
