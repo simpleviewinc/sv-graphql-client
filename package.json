@@ -1,6 +1,6 @@
 {
 	"name": "@simpleview/sv-graphql-client",
-	"version": "4.0.0",
+	"version": "4.1.0",
 	"description": "Client for communicating with sv-graphql",
 	"author": "Owen Allen <owenallenaz@gmail.com>",
 	"devDependencies": {
