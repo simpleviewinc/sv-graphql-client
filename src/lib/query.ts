@@ -1,18 +1,20 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import nullToUndefined from "./nullToUndefined";
-import { get } from "lodash";
+import get from "lodash/get";
 import { isNode } from "browser-or-node";
 import pMemoize from "p-memoize-cjs";
-import { Agent } from "https";
+import type { Agent as HttpsAgent } from "https";
+import type { Agent as HttpAgent } from "http";
 
-async function getAgent() {
+async function getAgent(type: "http" | "https") {
 	// This hack is to ensure that when this code is loaded in a webpack environment it doesn't recurse into the require("https") call
 	// Forcing the front-end to load the https module
 	const requireDynamically = eval("require");
-	const { Agent } = requireDynamically("https");
+	const { Agent } = requireDynamically(type);
 
 	return new Agent({
-		keepAlive: true
+		keepAlive: true,
+		keepAliveMsecs: 60_000
 	});
 }
 
@@ -44,10 +46,12 @@ export default async function query<T = any>({
 	timeout,
 	operationName
 }: QueryOptions): Promise<T> {
-	let httpsAgent: Agent | undefined = undefined;
+	let httpsAgent: HttpsAgent | undefined = undefined;
+	let httpAgent: HttpAgent | undefined = undefined;
 
 	if (isNode) {
-		httpsAgent = await getAgentMemo();
+		httpsAgent = await getAgentMemo("https");
+		httpAgent = await getAgentMemo("http");
 	}
 
 	if (token) {
@@ -77,7 +81,8 @@ export default async function query<T = any>({
 				variables,
 				operationName
 			},
-			httpsAgent: httpsAgent,
+			httpsAgent,
+			httpAgent,
 			timeout
 		});
 	} catch (e) {
