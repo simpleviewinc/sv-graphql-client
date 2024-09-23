@@ -53,6 +53,7 @@
 		"test": "ts-mocha --paths './src/**/*.test.ts'",
 		"docker": "./src/scripts/run || true",
 		"publish": "./src/scripts/publish",
+		"install:host": "npm install -f --package-lock false",
 		"style": "eslint .",
 		"style:fix": "eslint --fix .",
 		"sync-state": "bash ./src/scripts/sync-state",
@@ -63,6 +64,6 @@
 		"url": "https://github.com/simpleviewinc/sv-graphql-client"
 	},
 	"license": "MIT",
-	"packageManager": "yarn@3.2.1",
+	"packageManager": "yarn@4.2.2",
 	"sideEffects": false
 }
