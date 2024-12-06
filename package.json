@@ -5,20 +5,20 @@
 	"author": "Owen Allen <owenallenaz@gmail.com>",
 	"devDependencies": {
 		"@simpleview/assertlib": "1.2.0",
-		"@simpleview/mochalib": "1.0.2",
-		"@tsconfig/node16": "1.0.3",
+		"@simpleview/mochalib": "2.0.2",
+		"@tsconfig/node20": "20.1.4",
 		"@types/mocha": "9.1.1",
-		"@types/node": "18.7.21",
+		"@types/node": "20.1.4",
 		"eslint": "8.12.0",
 		"graphql": "16.3.0",
 		"mocha": "8.3.1",
 		"ts-mocha": "10.0.0",
-		"ts-node": "10.9.1",
+		"ts-node": "10.9.2",
 		"ts-node-dev": "2.0.0",
-		"typescript": "4.8.3"
+		"typescript": "5.4.5"
 	},
 	"dependencies": {
-		"@apollo/server": "4.7.0",
+		"@apollo/server": "4.10.4",
 		"@graphql-tools/schema": "8.3.5",
 		"@graphql-tools/utils": "8.6.5",
 		"axios": "0.24.0",
