@@ -15,7 +15,9 @@ export default function nullToUndefined(obj: any) {
 		}
 	} else {
 		for (const i in obj) {
-			if (obj[i] === null) {
+			if (obj[i] === undefined) {
+				continue;
+			} else if (obj[i] === null) {
 				delete obj[i];
 			} else if (obj[i] instanceof Array) {
 				nullToUndefined(obj[i]);

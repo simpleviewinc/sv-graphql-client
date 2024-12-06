@@ -1,9 +1,14 @@
-import { testArray } from "@simpleview/mochalib";
-import { deepCheck } from "@simpleview/assertlib";
+import { testArray, TestDef } from "@simpleview/mochalib";
 import nullToUndefined from "../lib/nullToUndefined";
+import { deepStrictEqual } from "assert";
 
 describe(__filename, function() {
-	const tests = [
+	interface Test {
+		item: any
+		result: any
+	}
+
+	const tests: TestDef<Test>[] = [
 		{
 			name: "top level",
 			args: {
@@ -12,8 +17,7 @@ describe(__filename, function() {
 					imageUrl: null
 				},
 				result: {
-					name: "Test",
-					imageUrl: undefined
+					name: "Test"
 				}
 			}
 		},
@@ -30,10 +34,7 @@ describe(__filename, function() {
 				},
 				result: {
 					assets: {
-						imageUrl: undefined,
-						user: {
-							name: undefined
-						}
+						user: {}
 					}
 				}
 			}
@@ -148,7 +149,6 @@ describe(__filename, function() {
 					assets: {
 						items: [
 							{
-								imageUrl: undefined,
 								name: "image"
 							}
 						]
@@ -185,11 +185,9 @@ describe(__filename, function() {
 					assets: {
 						items: [
 							{
-								imageUrl: undefined,
 								name: "image",
 								test: {
-									foo: "test",
-									nullKey: undefined
+									foo: "test"
 								},
 								test2: {}
 							},
@@ -238,7 +236,6 @@ describe(__filename, function() {
 					assets: {
 						items: [
 							{
-								imageUrl: undefined,
 								name: "image",
 								test: {
 									foo: "test",
@@ -256,10 +253,32 @@ describe(__filename, function() {
 				}
 			}
 		},
+		{
+			name: "should allow undefined keys to remain",
+			args: {
+				item: {
+					foo: "fooValue",
+					nullish: null,
+					bar: undefined,
+					baz: {
+						bazInner: "bazContent",
+						arr: ["test", undefined, "test2"]
+					}
+				},
+				result: {
+					foo: "fooValue",
+					bar: undefined,
+					baz: {
+						bazInner: "bazContent",
+						arr: ["test", undefined, "test2"]
+					}
+				}
+			}
+		}
 	]
 
 	testArray(tests, function(test) {
 		nullToUndefined(test.item);
-		deepCheck(test.item, test.result);
+		deepStrictEqual(test.item, test.result);
 	});
 });
